@@ -1,71 +1,266 @@
 /* ─────────────────────────────────────────────────────────────
    RESET & BASE
 ──────────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 html {
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
   scroll-behavior: smooth;
+  /* Prevent iOS from auto-zooming inputs */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
 }
-body { min-height: 100vh; }
+
+body {
+  /* Use dvh so iOS Safari toolbar doesn't cause overflow */
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Remove iOS tap highlight flash on all interactive elements */
+*,
+button,
+a,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
 
 /* ─────────────────────────────────────────────────────────────
    DESIGN TOKENS  (dark default)
 ──────────────────────────────────────────────────────────────── */
 :root {
-  --bg-app:      #0b0b15;
-  --bg-surface:  #12121e;
-  --bg-card:     #191928;
-  --bg-card-hi:  #1e1e30;
-  --border:      rgba(255,255,255,0.07);
-  --border-hi:   rgba(255,255,255,0.13);
-  --text-1:      #e8e8f2;
-  --text-2:      rgba(232,232,242,0.55);
-  --text-3:      rgba(232,232,242,0.30);
-  --green:       #34d399;
-  --green-glow:  rgba(52,211,153,0.35);
-  --orange:      #f59e0b;
-  --orange-glow: rgba(245,158,11,0.35);
-  --blue:        #60a5fa;
-  --purple:      #a78bfa;
-  --neon:        #39e88e;
+  --bg-app: #0b0b15;
+  --bg-surface: #12121e;
+  --bg-card: #191928;
+  --bg-card-hi: #1e1e30;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hi: rgba(255, 255, 255, 0.13);
+  --text-1: #e8e8f2;
+  --text-2: rgba(232, 232, 242, 0.55);
+  --text-3: rgba(232, 232, 242, 0.3);
+  --green: #34d399;
+  --green-glow: rgba(52, 211, 153, 0.35);
+  --orange: #f59e0b;
+  --orange-glow: rgba(245, 158, 11, 0.35);
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --neon: #39e88e;
+
+  /* Mobile nav height — used for bottom clearance */
+  --mobile-nav-h: 64px;
+  --mobile-nav-bottom: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom));
 }
 
 [data-theme="light"] {
-  --bg-app:     #f1f3f8;
+  --bg-app: #f1f3f8;
   --bg-surface: #e8ecf4;
-  --bg-card:    #ffffff;
+  --bg-card: #ffffff;
   --bg-card-hi: #f5f7fc;
-  --border:     rgba(0,0,0,0.07);
-  --border-hi:  rgba(0,0,0,0.13);
-  --text-1:     #111827;
-  --text-2:     #4b5563;
-  --text-3:     #9ca3af;
+  --border: rgba(0, 0, 0, 0.07);
+  --border-hi: rgba(0, 0, 0, 0.13);
+  --text-1: #111827;
+  --text-2: #4b5563;
+  --text-3: #9ca3af;
 }
 
 /* ─────────────────────────────────────────────────────────────
    GLOBAL COLOR TOKENS → Tailwind compatibility layer
 ──────────────────────────────────────────────────────────────── */
-.app-root                     { background: var(--bg-app); color: var(--text-1); }
-.glass-nav                    { background: rgba(11,11,21,0.85); backdrop-filter: blur(20px); }
-[data-theme="light"] .glass-nav { background: rgba(241,243,248,0.92); }
+.app-root {
+  background: var(--bg-app);
+  color: var(--text-1);
+}
+.glass-nav {
+  background: rgba(11, 11, 21, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+[data-theme="light"] .glass-nav {
+  background: rgba(241, 243, 248, 0.95);
+}
 
-.card                         { background: var(--bg-card); border: 1px solid var(--border); }
-.card-hi                      { background: var(--bg-card-hi); border: 1px solid var(--border); }
-.surface                      { background: var(--bg-surface); }
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+.card-hi {
+  background: var(--bg-card-hi);
+  border: 1px solid var(--border);
+}
+.surface {
+  background: var(--bg-surface);
+}
 
 /* Text shortcuts */
-.t1 { color: var(--text-1); }
-.t2 { color: var(--text-2); }
-.t3 { color: var(--text-3); }
+.t1 {
+  color: var(--text-1);
+}
+.t2 {
+  color: var(--text-2);
+}
+.t3 {
+  color: var(--text-3);
+}
 
 /* ─────────────────────────────────────────────────────────────
    SCROLLBAR
 ──────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
-[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SAFE AREA HELPERS (notched phones / iOS Dynamic Island)
+──────────────────────────────────────────────────────────────── */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE BOTTOM NAV
+──────────────────────────────────────────────────────────────── */
+.mobile-bottom-nav {
+  display: none; /* shown only on mobile via media query */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: rgba(11, 11, 21, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-hi);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+[data-theme="light"] .mobile-bottom-nav {
+  background: rgba(241, 243, 248, 0.97);
+}
+
+.mobile-bottom-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: var(--mobile-nav-h);
+  padding: 0 4px;
+}
+
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  height: 100%;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  border-radius: 12px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  /* Minimum 44×44 touch target */
+  min-height: 44px;
+  min-width: 44px;
+}
+.mobile-nav-btn .nav-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+.mobile-nav-btn.active {
+  color: var(--green);
+  background: rgba(52, 211, 153, 0.08);
+}
+.mobile-nav-btn:active {
+  transform: scale(0.93);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE CLEARANCE — prevents content sitting under bottom nav
+──────────────────────────────────────────────────────────────── */
+.mobile-page-clearance {
+  padding-bottom: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE DRAWER (sidebar)
+──────────────────────────────────────────────────────────────── */
+.mobile-drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 150;
+  animation: fadeIn 0.2s ease;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(340px, 90vw);
+  z-index: 160;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-hi);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 5;
+}
 
 /* ─────────────────────────────────────────────────────────────
    CALENDAR TABLE  (must be <table> for sticky column + scrolling)
@@ -77,18 +272,31 @@ body { min-height: 100vh; }
   font-size: 12px;
 }
 
+/* Scroll wrapper — allows horizontal scroll on mobile */
+.cal-scroll-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  /* Negative margins so it goes edge-to-edge on mobile */
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
 /* Sticky label column */
-.cal-th-label, .cal-td-label {
+.cal-th-label,
+.cal-td-label {
   position: sticky;
   left: 0;
   z-index: 10;
   background: var(--bg-card);
-  box-shadow: 3px 0 16px rgba(0,0,0,0.4);
-  min-width: 160px;
-  max-width: 190px;
+  box-shadow: 3px 0 16px rgba(0, 0, 0, 0.4);
+  min-width: 130px;
+  max-width: 165px;
 }
 [data-theme="light"] .cal-th-label,
-[data-theme="light"] .cal-td-label { box-shadow: 3px 0 8px rgba(0,0,0,0.08); }
+[data-theme="light"] .cal-td-label {
+  box-shadow: 3px 0 8px rgba(0, 0, 0, 0.08);
+}
 
 /* Week group header */
 .cal-th-week {
@@ -97,7 +305,7 @@ body { min-height: 100vh; }
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: 0.06em;
   padding: 6px 4px;
   text-align: center;
   border-bottom: 1px solid var(--border);
@@ -130,21 +338,35 @@ body { min-height: 100vh; }
 .cal-td {
   text-align: center;
   padding: 2px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   vertical-align: middle;
 }
-[data-theme="light"] .cal-td { border-bottom-color: rgba(0,0,0,0.04); }
+[data-theme="light"] .cal-td {
+  border-bottom-color: rgba(0, 0, 0, 0.04);
+}
 
 /* Yesterday highlight — orange */
-.col-yesterday             { background: rgba(245,158,11,0.06) !important; }
-.cal-th-day.col-yesterday  { color: var(--orange) !important; font-weight: 800 !important; }
+.col-yesterday {
+  background: rgba(245, 158, 11, 0.06) !important;
+}
+.cal-th-day.col-yesterday {
+  color: var(--orange) !important;
+  font-weight: 800 !important;
+}
 
 /* Today highlight — green */
-.col-today                 { background: rgba(52,211,153,0.07) !important; }
-.cal-th-day.col-today      { color: var(--green) !important; font-weight: 900 !important; }
+.col-today {
+  background: rgba(52, 211, 153, 0.07) !important;
+}
+.cal-th-day.col-today {
+  color: var(--green) !important;
+  font-weight: 900 !important;
+}
 
 /* Frozen */
-.col-frozen { background: rgba(96,165,250,0.05) !important; }
+.col-frozen {
+  background: rgba(96, 165, 250, 0.05) !important;
+}
 
 /* Summary rows */
 .cal-summary td {
@@ -163,11 +385,11 @@ body { min-height: 100vh; }
   background: var(--bg-surface);
   text-align: left;
   padding-left: 10px;
-  box-shadow: 3px 0 12px rgba(0,0,0,0.3);
+  box-shadow: 3px 0 12px rgba(0, 0, 0, 0.3);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   CHECK CELL  (sleek neon-gradient, no check icon)
+   CHECK CELL
 ──────────────────────────────────────────────────────────────── */
 .chk {
   width: 22px;
@@ -185,44 +407,63 @@ body { min-height: 100vh; }
 
 .chk:hover {
   border-color: var(--green);
-  background: rgba(52,211,153,0.1);
-  box-shadow: 0 0 8px rgba(52,211,153,0.2);
+  background: rgba(52, 211, 153, 0.1);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.2);
 }
 
-/* Completed — gradient fill, no checkmark text */
+/* Larger tap target on touch devices */
+@media (pointer: coarse) {
+  .chk {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+  }
+  /* Expand the invisible hit area */
+  .cal-td {
+    padding: 3px 2px;
+  }
+}
+
+/* Completed */
 .chk.done {
   background: linear-gradient(135deg, #059669, #34d399);
   border-color: transparent;
-  box-shadow: 0 0 8px rgba(52,211,153,0.3);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
 }
 
 .chk.frozen {
-  background: rgba(96,165,250,0.2);
-  border-color: rgba(96,165,250,0.4);
+  background: rgba(96, 165, 250, 0.2);
+  border-color: rgba(96, 165, 250, 0.4);
 }
 
 /* Drag row */
-.habit-row { cursor: grab; }
-.habit-row:hover td { background: rgba(255,255,255,0.015) !important; }
-.habit-row.dragging { opacity: 0.45; }
+.habit-row {
+  cursor: grab;
+}
+.habit-row:hover td {
+  background: rgba(255, 255, 255, 0.015) !important;
+}
+.habit-row.dragging {
+  opacity: 0.45;
+}
 
 /* ─────────────────────────────────────────────────────────────
    INLINE EDIT INPUT
 ──────────────────────────────────────────────────────────────── */
 .inline-edit {
-  background: rgba(52,211,153,0.08);
-  border: 1px solid rgba(52,211,153,0.45);
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.45);
   border-radius: 5px;
   padding: 2px 7px;
   font-size: 13px;
   color: var(--text-1);
   outline: none;
-  width: 135px;
+  width: 120px;
   font-family: inherit;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   MEATBALL MENU
+   MEATBALL MENU — always visible on touch devices
 ──────────────────────────────────────────────────────────────── */
 .meatball-menu {
   position: fixed;
@@ -230,15 +471,21 @@ body { min-height: 100vh; }
   background: var(--bg-card-hi);
   border: 1px solid var(--border-hi);
   border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
   min-width: 148px;
   padding: 4px;
   animation: popIn 0.12s ease;
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.94) translateY(-4px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .meatball-item {
@@ -246,69 +493,115 @@ body { min-height: 100vh; }
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 8px 12px;
+  /* 44px minimum tap target */
+  padding: 10px 12px;
   font-size: 13px;
   color: var(--text-2);
   background: none;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
-  border-radius: 8px;
-  transition: all 0.12s;
-  font-family: inherit;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  transition: background 0.13s;
+  min-height: 44px;
 }
-.meatball-item:hover         { background: rgba(255,255,255,0.07); color: var(--text-1); }
-.meatball-item.danger:hover  { background: rgba(239,68,68,0.12); color: #f87171; }
+.meatball-item:hover,
+.meatball-item:active {
+  background: var(--bg-surface);
+  color: var(--text-1);
+}
+
+/* On touch devices, always show the meatball button */
+@media (pointer: coarse) {
+  .habit-meatball {
+    display: inline-block !important;
+    opacity: 0.6;
+  }
+}
 
 /* ─────────────────────────────────────────────────────────────
    MOOD PICKER POPOVER
 ──────────────────────────────────────────────────────────────── */
 .mood-picker-popover {
-  z-index: 9999;
   position: fixed;
+  z-index: 9500;
   background: var(--bg-card-hi);
   border: 1px solid var(--border-hi);
-  border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.65);
-  padding: 12px;
-  min-width: 220px;
-  animation: popIn 0.12s ease;
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  animation: popIn 0.14s ease;
 }
 
 .mood-emoji-btn {
   width: 36px;
   height: 36px;
-  border-radius: 9px;
+  border-radius: 8px;
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.04);
+  background: var(--surface-1);
   font-size: 19px;
   cursor: pointer;
   transition: all 0.12s;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Touch target */
+  min-height: 36px;
+  min-width: 36px;
 }
 .mood-emoji-btn:hover,
 .mood-emoji-btn.selected {
-  background: rgba(167,139,250,0.22);
-  border-color: rgba(167,139,250,0.55);
+  background: rgba(167, 139, 250, 0.22);
+  border-color: rgba(167, 139, 250, 0.55);
   transform: scale(1.15);
+}
+
+/* On mobile, mood picker becomes a bottom sheet */
+@media (max-width: 600px) {
+  .mood-picker-popover {
+    position: fixed !important;
+    bottom: calc(var(--mobile-nav-bottom) + 8px) !important;
+    left: 12px !important;
+    right: 12px !important;
+    top: auto !important;
+    width: auto !important;
+    border-radius: 18px;
+    padding: 16px;
+  }
+  .mood-emoji-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
    HEATMAP CELLS
 ──────────────────────────────────────────────────────────────── */
-.hm-lv0 { background: rgba(255,255,255,0.05); }
-.hm-lv1 { background: #14532d; }
-.hm-lv2 { background: #166534; }
-.hm-lv3 { background: #15803d; }
-.hm-lv4 { background: #22c55e; }
+.hm-lv0 {
+  background: rgba(255, 255, 255, 0.05);
+}
+.hm-lv1 {
+  background: #14532d;
+}
+.hm-lv2 {
+  background: #166534;
+}
+.hm-lv3 {
+  background: #15803d;
+}
+.hm-lv4 {
+  background: #22c55e;
+}
 
 /* ─────────────────────────────────────────────────────────────
    TODAY VIEW CHECKBOXES
 ──────────────────────────────────────────────────────────────── */
 .today-chk {
-  width: 28px; height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
   border: 1.5px solid var(--border-hi);
   background: transparent;
@@ -318,97 +611,197 @@ body { min-height: 100vh; }
   justify-content: center;
   transition: all 0.13s;
   font-size: 14px;
+  /* Accessible touch target */
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 10px;
 }
-.today-chk:hover      { border-color: var(--green); background: rgba(52,211,153,0.08); }
-.today-chk.done       { background: linear-gradient(135deg,#059669,#34d399); border-color: transparent; box-shadow: 0 0 10px rgba(52,211,153,0.35); color: #000; font-weight: 900; }
+.today-chk:hover {
+  border-color: var(--green);
+  background: rgba(52, 211, 153, 0.08);
+}
+.today-chk.done {
+  background: linear-gradient(135deg, #059669, #34d399);
+  border-color: transparent;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.35);
+  color: #000;
+  font-weight: 900;
+}
 
 /* ─────────────────────────────────────────────────────────────
-   LIGHT THEME — targeted overrides for tables
+   LIGHT THEME — targeted overrides
 ──────────────────────────────────────────────────────────────── */
-[data-theme="light"] .cal-th-week  { background: var(--bg-surface); }
-[data-theme="light"] .cal-th-dow   { background: var(--bg-surface); }
-[data-theme="light"] .cal-th-day   { background: var(--bg-app); }
-[data-theme="light"] .cal-summary td { background: var(--bg-surface); }
-[data-theme="light"] .cal-summary td:first-child { background: var(--bg-surface); }
-[data-theme="light"] .chk                  { border-color: rgba(0,0,0,0.2); }
-[data-theme="light"] .chk:hover            { border-color: #059669; background: rgba(5,150,105,0.08); }
-/* CRITICAL: light mode done must win over hover — use !important */
-[data-theme="light"] .chk.done             { background: linear-gradient(135deg,#059669,#34d399) !important; border-color: transparent !important; box-shadow: 0 0 8px rgba(52,211,153,0.4) !important; }
-[data-theme="light"] .chk.done:hover       { background: linear-gradient(135deg,#059669,#34d399) !important; border-color: transparent !important; }
-/* Instant active state so click feels immediate before React re-renders */
-[data-theme="light"] .chk:active           { background: rgba(5,150,105,0.2) !important; border-color: #059669 !important; transform: scale(0.88); }
-[data-theme="light"] .chk.done:active      { background: linear-gradient(135deg,#059669,#34d399) !important; }
-[data-theme="light"] .meatball-menu { background: #fff; }
-[data-theme="light"] .meatball-item { color: #374151; }
-[data-theme="light"] .meatball-item:hover { background: #f3f4f6; }
-[data-theme="light"] .mood-picker-popover { background: #fff; }
-[data-theme="light"] .mood-emoji-btn { background: #f9fafb; border-color: #e5e7eb; }
+[data-theme="light"] .cal-th-week {
+  background: var(--bg-surface);
+}
+[data-theme="light"] .cal-th-dow {
+  background: var(--bg-surface);
+}
+[data-theme="light"] .cal-th-day {
+  background: var(--bg-app);
+}
+[data-theme="light"] .cal-summary td {
+  background: var(--bg-surface);
+}
+[data-theme="light"] .cal-summary td:first-child {
+  background: var(--bg-surface);
+}
+[data-theme="light"] .chk {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+[data-theme="light"] .chk:hover {
+  border-color: #059669;
+  background: rgba(5, 150, 105, 0.08);
+}
+[data-theme="light"] .chk.done {
+  background: linear-gradient(135deg, #059669, #34d399) !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.4) !important;
+}
+[data-theme="light"] .chk.done:hover {
+  background: linear-gradient(135deg, #059669, #34d399) !important;
+  border-color: transparent !important;
+}
+[data-theme="light"] .chk:active {
+  background: rgba(5, 150, 105, 0.2) !important;
+  border-color: #059669 !important;
+  transform: scale(0.88);
+}
+[data-theme="light"] .chk.done:active {
+  background: linear-gradient(135deg, #059669, #34d399) !important;
+}
+[data-theme="light"] .meatball-menu {
+  background: #fff;
+}
+[data-theme="light"] .meatball-item {
+  color: #374151;
+}
+[data-theme="light"] .meatball-item:hover {
+  background: #f3f4f6;
+}
+[data-theme="light"] .mood-picker-popover {
+  background: #fff;
+}
+[data-theme="light"] .mood-emoji-btn {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+[data-theme="light"] .mobile-bottom-nav {
+  background: rgba(241, 243, 248, 0.97);
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+[data-theme="light"] .mobile-drawer {
+  background: #fff;
+  border-left-color: rgba(0, 0, 0, 0.1);
+}
+[data-theme="light"] .mobile-drawer-header {
+  background: #fff;
+}
 
 /* ─────────────────────────────────────────────────────────────
    ANIMATIONS
 ──────────────────────────────────────────────────────────────── */
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.slide-up { animation: slideUp 0.22s ease; }
+.slide-up {
+  animation: slideUp 0.22s ease;
+}
+
+@keyframes slideUpFull {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @keyframes fadeIn {
-  from { opacity: 0; } to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.fade-in { animation: fadeIn 0.2s ease; }
-
+.fade-in {
+  animation: fadeIn 0.2s ease;
+}
 
 /* ─────────────────────────────────────────────────────────────
-   INTERACTION SURFACE TOKENS  (theme-aware hover/bg helpers)
+   INTERACTION SURFACE TOKENS
 ──────────────────────────────────────────────────────────────── */
 :root {
-  --surface-1:     rgba(255,255,255,0.04);
-  --surface-2:     rgba(255,255,255,0.07);
-  --surface-3:     rgba(255,255,255,0.10);
-  --surface-4:     rgba(255,255,255,0.15);
-  --surface-hover: rgba(255,255,255,0.09);
-  --track-bg:      rgba(255,255,255,0.08);
-  --toggle-off:    rgba(255,255,255,0.18);
-  --chart-grid:    rgba(255,255,255,0.05);
+  --surface-1: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.07);
+  --surface-3: rgba(255, 255, 255, 0.1);
+  --surface-4: rgba(255, 255, 255, 0.15);
+  --surface-hover: rgba(255, 255, 255, 0.09);
+  --track-bg: rgba(255, 255, 255, 0.08);
+  --toggle-off: rgba(255, 255, 255, 0.18);
+  --chart-grid: rgba(255, 255, 255, 0.05);
 }
 
 [data-theme="light"] {
-  --surface-1:     rgba(0,0,0,0.04);
-  --surface-2:     rgba(0,0,0,0.06);
-  --surface-3:     rgba(0,0,0,0.09);
-  --surface-4:     rgba(0,0,0,0.12);
-  --surface-hover: rgba(0,0,0,0.07);
-  --track-bg:      rgba(0,0,0,0.08);
-  --toggle-off:    rgba(0,0,0,0.18);
-  --chart-grid:    rgba(0,0,0,0.06);
+  --surface-1: rgba(0, 0, 0, 0.04);
+  --surface-2: rgba(0, 0, 0, 0.06);
+  --surface-3: rgba(0, 0, 0, 0.09);
+  --surface-4: rgba(0, 0, 0, 0.12);
+  --surface-hover: rgba(0, 0, 0, 0.07);
+  --track-bg: rgba(0, 0, 0, 0.08);
+  --toggle-off: rgba(0, 0, 0, 0.18);
+  --chart-grid: rgba(0, 0, 0, 0.06);
 }
 
-/* Light mode: card and card-hi need explicit light backgrounds */
-[data-theme="light"] .card      { background: #ffffff; border-color: rgba(0,0,0,0.08); }
-[data-theme="light"] .card-hi   { background: #f5f7fc; border-color: rgba(0,0,0,0.10); }
-[data-theme="light"] .surface   { background: var(--bg-surface); }
-
-/* Light mode text helpers */
-[data-theme="light"] .t1 { color: #111827; }
-[data-theme="light"] .t2 { color: #374151; }
-[data-theme="light"] .t3 { color: #6b7280; }
-
-/* Light mode progress/track bars */
-[data-theme="light"] .track-bar { background: rgba(0,0,0,0.08) !important; }
-
-/* Light mode chart grid lines */
-[data-theme="light"] canvas { filter: none; }
+[data-theme="light"] .card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .card-hi {
+  background: #f5f7fc;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+[data-theme="light"] .surface {
+  background: var(--bg-surface);
+}
+[data-theme="light"] .t1 {
+  color: #111827;
+}
+[data-theme="light"] .t2 {
+  color: #374151;
+}
+[data-theme="light"] .t3 {
+  color: #6b7280;
+}
+[data-theme="light"] .track-bar {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+[data-theme="light"] canvas {
+  filter: none;
+}
 
 /* ─────────────────────────────────────────────────────────────
-   BUTTON / INTERACTIVE SURFACE UTILITY CLASSES
-   Use these instead of inline onMouseEnter rgba() hacks
+   BUTTON / INTERACTIVE UTILITY CLASSES
 ──────────────────────────────────────────────────────────────── */
 .btn-ghost {
   background: var(--surface-1);
   color: var(--text-2);
   border: 1px solid var(--border);
-  transition: background 0.13s, color 0.13s;
+  transition:
+    background 0.13s,
+    color 0.13s;
+  /* Ensure minimum tap target */
+  min-height: 40px;
 }
 .btn-ghost:hover {
   background: var(--surface-3);
@@ -419,7 +812,10 @@ body { min-height: 100vh; }
   background: var(--surface-2);
   color: var(--text-2);
   border: 1px solid transparent;
-  transition: background 0.13s, color 0.13s, border-color 0.13s;
+  transition:
+    background 0.13s,
+    color 0.13s,
+    border-color 0.13s;
 }
 .btn-surface:hover {
   background: var(--surface-3);
@@ -427,27 +823,43 @@ body { min-height: 100vh; }
   border-color: var(--border-hi);
 }
 
-/* Pill toggle in BulkCheckin / TodayPanel / YesterdayView */
+/* Pill toggle */
 .toggle-track {
-  position: relative; width: 28px; height: 16px; border-radius: 99px;
+  position: relative;
+  width: 28px;
+  height: 16px;
+  border-radius: 99px;
   background: var(--toggle-off);
   transition: background 0.15s;
 }
-.toggle-track.on { background: var(--green); box-shadow: 0 0 8px var(--green-glow); }
-.toggle-track.on-orange { background: var(--orange); box-shadow: 0 0 8px var(--orange-glow); }
+.toggle-track.on {
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+}
+.toggle-track.on-orange {
+  background: var(--orange);
+  box-shadow: 0 0 8px var(--orange-glow);
+}
 .toggle-thumb {
-  position: absolute; top: 2px; left: 2px;
-  width: 12px; height: 12px; border-radius: 99px;
-  background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 99px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: left 0.15s;
 }
 .toggle-track.on .toggle-thumb,
-.toggle-track.on-orange .toggle-thumb { left: 14px; }
+.toggle-track.on-orange .toggle-thumb {
+  left: 14px;
+}
 
-/* Progress track background */
-.progress-track { background: var(--track-bg); }
+.progress-track {
+  background: var(--track-bg);
+}
 
-/* Filter/view pill active state */
 .pill-active-filter {
   background: var(--surface-3);
   color: var(--text-1);
@@ -457,54 +869,88 @@ body { min-height: 100vh; }
   color: var(--text-3);
   border: 1px solid transparent;
   background: transparent;
-  transition: color 0.13s, border-color 0.13s;
+  transition:
+    color 0.13s,
+    border-color 0.13s;
 }
-.pill-inactive:hover { color: var(--text-2); border-color: var(--border); }
+.pill-inactive:hover {
+  color: var(--text-2);
+  border-color: var(--border);
+}
 
-/* Close / icon button */
 .icon-btn {
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 99px; color: var(--text-3);
-  background: transparent; transition: background 0.13s, color 0.13s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 99px;
+  color: var(--text-3);
+  background: transparent;
+  transition:
+    background 0.13s,
+    color 0.13s;
+  /* Accessible touch target */
+  min-width: 36px;
+  min-height: 36px;
 }
-.icon-btn:hover { background: var(--surface-3); color: var(--text-1); }
+.icon-btn:hover {
+  background: var(--surface-3);
+  color: var(--text-1);
+}
 
 /* ─────────────────────────────────────────────────────────────
    CHECK CELL ANIMATIONS
 ──────────────────────────────────────────────────────────────── */
 @keyframes chkPop {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.45); }
-  70%  { transform: scale(0.88); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.45);
+  }
+  70% {
+    transform: scale(0.88);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes chkRipple {
-  0%   { box-shadow: 0 0 0 0px rgba(52,211,153,0.55); }
-  100% { box-shadow: 0 0 0 10px rgba(52,211,153,0); }
+  0% {
+    box-shadow: 0 0 0 0px rgba(52, 211, 153, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+  }
 }
 
 @keyframes chkUnpop {
-  0%   { transform: scale(1); }
-  35%  { transform: scale(0.78); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.78);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .chk.pop-anim {
-  animation: chkPop 0.28s cubic-bezier(0.34,1.56,0.64,1), chkRipple 0.45s ease-out;
+  animation:
+    chkPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    chkRipple 0.45s ease-out;
 }
-
 .chk.unpop-anim {
   animation: chkUnpop 0.18s ease-out;
 }
 
-/* Particle burst — tiny dots that fly out on check */
+/* Particle burst */
 .chk-burst {
   position: absolute;
   pointer-events: none;
   z-index: 100;
 }
-
 .chk-burst span {
   position: absolute;
   width: 5px;
@@ -512,23 +958,134 @@ body { min-height: 100vh; }
   border-radius: 50%;
   animation: burstFly 0.5s ease-out forwards;
 }
-
 @keyframes burstFly {
-  0%   { transform: translate(0,0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
 }
 
-/* Today checklist pop */
 @keyframes todayChkPop {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.3); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.today-chk.pop-anim {
+  animation: todayChkPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.today-chk.pop-anim { animation: todayChkPop 0.25s cubic-bezier(0.34,1.56,0.64,1); }
-
-/* Kit card hover glow */
 @keyframes kitCardPulse {
-  0%, 100% { box-shadow: 0 0 0 0px transparent; }
-  50%       { box-shadow: 0 0 18px var(--kit-glow); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0px transparent;
+  }
+  50% {
+    box-shadow: 0 0 18px var(--kit-glow);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE BREAKPOINTS
+──────────────────────────────────────────────────────────────── */
+
+/* Show mobile bottom nav + add bottom clearance on mobile */
+@media (max-width: 767px) {
+  .mobile-bottom-nav {
+    display: block;
+  }
+  .mobile-page-clearance {
+    padding-bottom: var(--mobile-nav-bottom);
+  }
+
+  /* Compact top nav on mobile */
+  .glass-nav {
+    padding: 0 12px;
+    height: 52px;
+  }
+
+  /* Full-width cards on mobile, no side padding needed */
+  .app-root .card {
+    border-radius: 16px;
+  }
+
+  /* Calendar label column slimmer on mobile */
+  .cal-th-label,
+  .cal-td-label {
+    min-width: 110px;
+    max-width: 130px;
+    font-size: 11px;
+  }
+
+  /* Calendar check cells slightly smaller */
+  .chk {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* MentalState table — allow scrolling, don't squash */
+  .mental-state-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* CommandBar — wraps on mobile */
+  .command-bar-inner {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px;
+  }
+
+  /* Freeze banner stacks */
+  .freeze-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Main grid: single column on mobile */
+  .main-two-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sidebar becomes hidden drawer on mobile */
+  .sidebar-desktop {
+    display: none;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .main-two-col {
+    grid-template-columns: 1fr 280px !important;
+  }
+}
+
+/* Hide mobile-only elements on desktop */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+  .mobile-page-clearance {
+    padding-bottom: 0;
+  }
+}
+
+/* Hide desktop-only elements on mobile */
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
 }
