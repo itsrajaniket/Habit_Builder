@@ -20,18 +20,19 @@ import { useTheme } from "./hooks/useTheme";
 import { useConfetti } from "./hooks/useConfetti";
 import { todayStr } from "./utils/dateUtils";
 
-/* ── tiny hook: returns true when window width ≤ maxWidth ── */
+/* ── Reliable mobile detection using matchMedia ── */
 function useIsMobile(maxWidth = 767) {
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== "undefined" ? window.innerWidth <= maxWidth : false,
-  );
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${maxWidth}px)`);
+    // Set immediately after mount (avoids SSR mismatch)
+    setIsMobile(mql.matches);
     const handler = (e) => setIsMobile(e.matches);
     mql.addEventListener("change", handler);
-    setIsMobile(mql.matches);
     return () => mql.removeEventListener("change", handler);
   }, [maxWidth]);
+
   return isMobile;
 }
 
@@ -77,7 +78,9 @@ function MobileBottomNav({ activeSection, onSection, onOpenHabitModal }) {
             }
           >
             <span className="nav-icon">{tab.icon}</span>
-            {!tab.isAction && <span>{tab.label}</span>}
+            {!tab.isAction && (
+              <span style={{ fontSize: 9, marginTop: 1 }}>{tab.label}</span>
+            )}
           </button>
         ))}
       </div>
@@ -87,7 +90,6 @@ function MobileBottomNav({ activeSection, onSection, onOpenHabitModal }) {
 
 /* ── Mobile sidebar drawer ── */
 function MobileSidebarDrawer({ isOpen, onClose, onRemoveHabit }) {
-  // Prevent body scroll when open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -97,7 +99,6 @@ function MobileSidebarDrawer({ isOpen, onClose, onRemoveHabit }) {
 
   return (
     <>
-      {/* Overlay */}
       {isOpen && (
         <div
           className="mobile-drawer-overlay"
@@ -106,23 +107,24 @@ function MobileSidebarDrawer({ isOpen, onClose, onRemoveHabit }) {
           aria-hidden="true"
         />
       )}
-      {/* Drawer panel */}
       <div
         className={`mobile-drawer ${isOpen ? "open" : ""}`}
         role="dialog"
         aria-label="Sidebar"
+        aria-modal="true"
       >
         <div className="mobile-drawer-header">
           <span className="text-sm font-bold t1">📊 Analysis & Data</span>
           <button
             onClick={onClose}
-            className="icon-btn w-9 h-9 text-lg"
+            className="icon-btn"
+            style={{ width: 36, height: 36, fontSize: 18 }}
             aria-label="Close sidebar"
           >
             ✕
           </button>
         </div>
-        <div style={{ padding: "12px" }}>
+        <div style={{ padding: "0 12px 24px" }}>
           <Sidebar onRemoveHabit={onRemoveHabit} />
         </div>
       </div>
@@ -130,6 +132,7 @@ function MobileSidebarDrawer({ isOpen, onClose, onRemoveHabit }) {
   );
 }
 
+/* ── Main app content ── */
 function AppContent() {
   const habits = useHabitStore((s) => s.habits);
   const completions = useHabitStore((s) => s.completions);
@@ -142,6 +145,7 @@ function AppContent() {
 
   const [showHabitModal, setShowHabitModal] = useState(false);
   const [showToday, setShowToday] = useState(false);
+  /* Default section: calendar */
   const [activeSection, setActiveSection] = useState("calendar");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -149,6 +153,7 @@ function AppContent() {
   const { canvasRef, trigger: triggerConfetti } = useConfetti();
   useTheme();
 
+  /* Perfect day confetti */
   useEffect(() => {
     if (!habits.length) return;
     const today = todayStr();
@@ -160,7 +165,7 @@ function AppContent() {
     }
   }, [completions]);
 
-  // Sync mobile nav section changes
+  /* Keep Today panel in sync with nav section */
   useEffect(() => {
     if (!isMobile) return;
     if (activeSection === "today") {
@@ -170,7 +175,8 @@ function AppContent() {
     }
     if (activeSection === "sidebar") {
       setDrawerOpen(true);
-      setActiveSection("calendar"); // reset so drawer can be re-opened
+      /* Reset so tapping "More" again re-opens drawer */
+      setActiveSection("calendar");
     }
   }, [activeSection, isMobile]);
 
@@ -200,14 +206,18 @@ function AppContent() {
 
   const openHabitModal = useCallback(() => setShowHabitModal(true), []);
 
-  /* ─── Determine visible sections on mobile ─── */
+  /*
+    On mobile we show ONE section at a time to avoid the giant
+    "everything stacked" problem.
+    On desktop all sections are visible in the two-column layout.
+  */
   const showCalendar = !isMobile || activeSection === "calendar";
   const showAnalytics = !isMobile || activeSection === "analytics";
 
   return (
     <div
       className="app-root mobile-page-clearance"
-      style={{ minHeight: "100dvh" }}
+      style={{ minHeight: "100dvh", background: "var(--bg-app)" }}
     >
       {/* Confetti canvas */}
       <canvas
@@ -224,10 +234,10 @@ function AppContent() {
         }}
       />
 
-      {/* Top nav */}
+      {/* ── Top nav ── */}
       <GlobalNav onOpenSidebar={() => setDrawerOpen(true)} />
 
-      {/* Filter / board command bar */}
+      {/* ── Filter / board bar ── */}
       <CommandBar
         onOpenToday={() => {
           setShowToday((v) => !v);
@@ -237,7 +247,7 @@ function AppContent() {
 
       {/* ── Banners ── */}
       {(showToday || streakFreezes > 0) && (
-        <div className="px-3 xs:px-4 md:px-5 pt-3 md:pt-4 flex flex-col gap-2">
+        <div style={{ padding: "12px 12px 0" }} className="flex flex-col gap-2">
           {showToday && (
             <TodayPanel
               onClose={() => {
@@ -246,11 +256,11 @@ function AppContent() {
               }}
             />
           )}
-
           {streakFreezes > 0 && (
             <div
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl slide-up freeze-banner"
+              className="flex items-center justify-between rounded-xl freeze-banner"
               style={{
+                padding: "10px 14px",
                 background: "rgba(96,165,250,0.07)",
                 border: "1px solid rgba(96,165,250,0.18)",
               }}
@@ -264,18 +274,19 @@ function AppContent() {
               </span>
               <button
                 onClick={handleFreeze}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all shrink-0"
                 style={{
+                  padding: "6px 12px",
+                  borderRadius: 99,
+                  fontSize: 12,
+                  fontWeight: 700,
                   background: "rgba(96,165,250,0.15)",
                   color: "var(--blue)",
                   border: "1px solid rgba(96,165,250,0.2)",
+                  cursor: "pointer",
+                  minHeight: 36,
+                  fontFamily: "inherit",
+                  flexShrink: 0,
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "rgba(96,165,250,0.25)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "rgba(96,165,250,0.15)")
-                }
               >
                 Use Today
               </button>
@@ -284,16 +295,30 @@ function AppContent() {
         </div>
       )}
 
-      {/* ── Main layout ── */}
+      {/* ── Main two-column layout ── */}
       <div
-        className="main-two-col grid gap-4 px-3 xs:px-4 md:px-5 pt-4 pb-4"
-        style={{ gridTemplateColumns: isMobile ? "1fr" : "1fr 340px" }}
+        className="main-two-col"
+        style={{
+          display: "grid",
+          /*
+            Mobile: single column.
+            Desktop: content + 340px sidebar.
+            The !important on the CSS rule handles this,
+            but we also set it inline for JS-driven isMobile.
+          */
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 340px",
+          gap: 16,
+          padding: isMobile ? "12px 10px" : "16px 20px",
+        }}
       >
-        {/* LEFT column — always visible on desktop; section-gated on mobile */}
-        <div className="flex flex-col gap-4 min-w-0">
-          {/* Calendar card */}
+        {/* ── LEFT column ── */}
+        <div className="flex flex-col gap-4" style={{ minWidth: 0 }}>
+          {/* Calendar card — only on calendar tab (mobile) */}
           {showCalendar && (
-            <div className="card rounded-2xl p-3 xs:p-4 md:p-5 slide-up">
+            <div
+              className="card rounded-2xl"
+              style={{ padding: isMobile ? "12px" : "20px" }}
+            >
               {habits.length === 0 ? (
                 <EmptyState onAddHabit={openHabitModal} />
               ) : (
@@ -301,12 +326,24 @@ function AppContent() {
               )}
               <button
                 onClick={openHabitModal}
-                className="mt-4 w-full py-3 flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-all"
                 style={{
+                  marginTop: 14,
+                  width: "100%",
+                  padding: "12px 0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  borderRadius: 12,
+                  fontSize: 13,
+                  fontWeight: 700,
                   border: "1.5px dashed rgba(52,211,153,0.35)",
                   color: "var(--green)",
                   background: "rgba(52,211,153,0.04)",
-                  minHeight: 44,
+                  cursor: "pointer",
+                  minHeight: 48,
+                  fontFamily: "inherit",
+                  transition: "background 0.15s",
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.background = "rgba(52,211,153,0.09)")
@@ -315,12 +352,12 @@ function AppContent() {
                   (e.currentTarget.style.background = "rgba(52,211,153,0.04)")
                 }
               >
-                <span className="text-lg leading-none">＋</span> Add Habit
+                <span style={{ fontSize: 18 }}>＋</span> Add Habit
               </button>
             </div>
           )}
 
-          {/* Analytics sections */}
+          {/* Analytics sections — only on analytics tab (mobile) */}
           {showAnalytics && (
             <>
               <Collapsible
@@ -358,21 +395,23 @@ function AppContent() {
           )}
         </div>
 
-        {/* RIGHT column — desktop sidebar (hidden on mobile; shown in drawer instead) */}
-        <div className="sidebar-desktop">
-          <Sidebar onRemoveHabit={handleRemove} />
-        </div>
+        {/* ── RIGHT column — desktop sidebar only ── */}
+        {!isMobile && (
+          <div className="sidebar-desktop">
+            <Sidebar onRemoveHabit={handleRemove} />
+          </div>
+        )}
       </div>
 
       {/* ── Deep Analytics (full width) ── */}
-      <div className="px-0 pt-3 md:pt-5">
+      <div style={{ paddingTop: 8 }}>
         <AnalyticsFooter />
       </div>
 
       {/* ── Footer ── */}
       <AppFooter />
 
-      {/* ── Mobile bottom nav ── */}
+      {/* ── Mobile bottom nav — rendered always, CSS hides on desktop ── */}
       <MobileBottomNav
         activeSection={activeSection}
         onSection={setActiveSection}
@@ -381,7 +420,7 @@ function AppContent() {
 
       {/* ── Mobile sidebar drawer ── */}
       <MobileSidebarDrawer
-        isOpen={isMobile && drawerOpen}
+        isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         onRemoveHabit={handleRemove}
       />

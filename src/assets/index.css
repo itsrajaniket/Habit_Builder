@@ -1089,3 +1089,66 @@ a,
     display: none !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   XS BREAKPOINT UTILITIES  (375px — Tailwind custom `xs:` classes)
+   These are needed because the custom xs breakpoint may not compile
+   without a full Tailwind build. We define them as plain CSS here.
+──────────────────────────────────────────────────────────────── */
+
+/* xs:hidden — hide below 375px (show on 375px+) */
+@media (max-width: 374px) {
+  .xs\:hidden {
+    display: none !important;
+  }
+  .xs\:inline {
+    display: none !important;
+  }
+  .xs\:block {
+    display: none !important;
+  }
+  .xs\:flex {
+    display: none !important;
+  }
+}
+
+/* xs:inline, xs:block, xs:flex — show on 375px+ */
+@media (min-width: 375px) {
+  .xs\:hidden {
+    display: none !important;
+  }
+  .xs\:inline {
+    display: inline !important;
+  }
+  .xs\:block {
+    display: block !important;
+  }
+  .xs\:flex {
+    display: flex !important;
+  }
+  /* xs:px-4 */
+  .xs\:px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  /* xs:inline means: hidden by default, shown at xs+ */
+  .hidden.xs\:inline {
+    display: inline !important;
+  }
+  .hidden.xs\:block {
+    display: block !important;
+  }
+  .hidden.xs\:flex {
+    display: flex !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BG VARIABLE ALIASES  (some components use --bg, others --bg-card)
+   Ensure both naming conventions work.
+──────────────────────────────────────────────────────────────── */
+:root {
+  --bg: var(--bg-app);
+  /* Aliases used in some components */
+  --surface-0: var(--bg-card);
+}
