@@ -12,25 +12,9 @@
 html {
   font-family: "Outfit", system-ui, sans-serif;
   scroll-behavior: smooth;
-  /* Prevent iOS from auto-zooming inputs */
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  overflow-x: hidden;
 }
-
 body {
-  /* Use dvh so iOS Safari toolbar doesn't cause overflow */
-  min-height: 100dvh;
-  overflow-x: hidden;
-}
-
-/* Remove iOS tap highlight flash on all interactive elements */
-*,
-button,
-a,
-[role="button"] {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  min-height: 100vh;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -53,10 +37,6 @@ a,
   --blue: #60a5fa;
   --purple: #a78bfa;
   --neon: #39e88e;
-
-  /* Mobile nav height — used for bottom clearance */
-  --mobile-nav-h: 64px;
-  --mobile-nav-bottom: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom));
 }
 
 [data-theme="light"] {
@@ -79,12 +59,11 @@ a,
   color: var(--text-1);
 }
 .glass-nav {
-  background: rgba(11, 11, 21, 0.88);
+  background: rgba(11, 11, 21, 0.85);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 [data-theme="light"] .glass-nav {
-  background: rgba(241, 243, 248, 0.95);
+  background: rgba(241, 243, 248, 0.92);
 }
 
 .card {
@@ -129,140 +108,6 @@ a,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SAFE AREA HELPERS (notched phones / iOS Dynamic Island)
-──────────────────────────────────────────────────────────────── */
-.safe-top {
-  padding-top: env(safe-area-inset-top);
-}
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.safe-left {
-  padding-left: env(safe-area-inset-left);
-}
-.safe-right {
-  padding-right: env(safe-area-inset-right);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   MOBILE BOTTOM NAV
-──────────────────────────────────────────────────────────────── */
-.mobile-bottom-nav {
-  display: none; /* shown only on mobile via media query */
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  background: rgba(11, 11, 21, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border-hi);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-[data-theme="light"] .mobile-bottom-nav {
-  background: rgba(241, 243, 248, 0.97);
-}
-
-.mobile-bottom-nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: var(--mobile-nav-h);
-  padding: 0 4px;
-}
-
-.mobile-nav-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  flex: 1;
-  height: 100%;
-  padding: 8px 4px;
-  border: none;
-  background: transparent;
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 600;
-  font-family: "Outfit", sans-serif;
-  cursor: pointer;
-  border-radius: 12px;
-  transition:
-    color 0.15s,
-    background 0.15s;
-  /* Minimum 44×44 touch target */
-  min-height: 44px;
-  min-width: 44px;
-}
-.mobile-nav-btn .nav-icon {
-  font-size: 20px;
-  line-height: 1;
-}
-.mobile-nav-btn.active {
-  color: var(--green);
-  background: rgba(52, 211, 153, 0.08);
-}
-.mobile-nav-btn:active {
-  transform: scale(0.93);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   MOBILE CLEARANCE — prevents content sitting under bottom nav
-──────────────────────────────────────────────────────────────── */
-.mobile-page-clearance {
-  padding-bottom: 0;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   MOBILE DRAWER (sidebar)
-──────────────────────────────────────────────────────────────── */
-.mobile-drawer-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  z-index: 150;
-  animation: fadeIn 0.2s ease;
-}
-
-.mobile-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(340px, 90vw);
-  z-index: 160;
-  background: var(--bg-card);
-  border-left: 1px solid var(--border-hi);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  transform: translateX(100%);
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.mobile-drawer.open {
-  transform: translateX(0);
-}
-
-.mobile-drawer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 16px 12px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: var(--bg-card);
-  z-index: 5;
-}
-
-/* ─────────────────────────────────────────────────────────────
    CALENDAR TABLE  (must be <table> for sticky column + scrolling)
 ──────────────────────────────────────────────────────────────── */
 .cal-table {
@@ -270,16 +115,6 @@ a,
   border-collapse: separate;
   border-spacing: 0;
   font-size: 12px;
-}
-
-/* Scroll wrapper — allows horizontal scroll on mobile */
-.cal-scroll-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  /* Negative margins so it goes edge-to-edge on mobile */
-  margin: 0 -4px;
-  padding: 0 4px;
 }
 
 /* Sticky label column */
@@ -290,8 +125,8 @@ a,
   z-index: 10;
   background: var(--bg-card);
   box-shadow: 3px 0 16px rgba(0, 0, 0, 0.4);
-  min-width: 130px;
-  max-width: 165px;
+  min-width: 160px;
+  max-width: 190px;
 }
 [data-theme="light"] .cal-th-label,
 [data-theme="light"] .cal-td-label {
@@ -389,7 +224,7 @@ a,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   CHECK CELL
+   CHECK CELL  (sleek neon-gradient, no check icon)
 ──────────────────────────────────────────────────────────────── */
 .chk {
   width: 22px;
@@ -411,20 +246,7 @@ a,
   box-shadow: 0 0 8px rgba(52, 211, 153, 0.2);
 }
 
-/* Larger tap target on touch devices */
-@media (pointer: coarse) {
-  .chk {
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-  }
-  /* Expand the invisible hit area */
-  .cal-td {
-    padding: 3px 2px;
-  }
-}
-
-/* Completed */
+/* Completed — gradient fill, no checkmark text */
 .chk.done {
   background: linear-gradient(135deg, #059669, #34d399);
   border-color: transparent;
@@ -458,12 +280,12 @@ a,
   font-size: 13px;
   color: var(--text-1);
   outline: none;
-  width: 120px;
+  width: 135px;
   font-family: inherit;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   MEATBALL MENU — always visible on touch devices
+   MEATBALL MENU
 ──────────────────────────────────────────────────────────────── */
 .meatball-menu {
   position: fixed;
@@ -493,88 +315,59 @@ a,
   align-items: center;
   gap: 8px;
   width: 100%;
-  /* 44px minimum tap target */
-  padding: 10px 12px;
+  padding: 8px 12px;
   font-size: 13px;
   color: var(--text-2);
   background: none;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   text-align: left;
-  font-family: "Outfit", sans-serif;
-  font-weight: 600;
-  transition: background 0.13s;
-  min-height: 44px;
+  border-radius: 8px;
+  transition: all 0.12s;
+  font-family: inherit;
 }
-.meatball-item:hover,
-.meatball-item:active {
-  background: var(--bg-surface);
+.meatball-item:hover {
+  background: rgba(255, 255, 255, 0.07);
   color: var(--text-1);
 }
-
-/* On touch devices, always show the meatball button */
-@media (pointer: coarse) {
-  .habit-meatball {
-    display: inline-block !important;
-    opacity: 0.6;
-  }
+.meatball-item.danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
 }
 
 /* ─────────────────────────────────────────────────────────────
    MOOD PICKER POPOVER
 ──────────────────────────────────────────────────────────────── */
 .mood-picker-popover {
+  z-index: 9999;
   position: fixed;
-  z-index: 9500;
   background: var(--bg-card-hi);
   border: 1px solid var(--border-hi);
-  border-radius: 14px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
-  padding: 10px;
-  animation: popIn 0.14s ease;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);
+  padding: 12px;
+  min-width: 220px;
+  animation: popIn 0.12s ease;
 }
 
 .mood-emoji-btn {
   width: 36px;
   height: 36px;
-  border-radius: 8px;
+  border-radius: 9px;
   border: 1px solid var(--border);
-  background: var(--surface-1);
+  background: rgba(255, 255, 255, 0.04);
   font-size: 19px;
   cursor: pointer;
   transition: all 0.12s;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Touch target */
-  min-height: 36px;
-  min-width: 36px;
 }
 .mood-emoji-btn:hover,
 .mood-emoji-btn.selected {
   background: rgba(167, 139, 250, 0.22);
   border-color: rgba(167, 139, 250, 0.55);
   transform: scale(1.15);
-}
-
-/* On mobile, mood picker becomes a bottom sheet */
-@media (max-width: 600px) {
-  .mood-picker-popover {
-    position: fixed !important;
-    bottom: calc(var(--mobile-nav-bottom) + 8px) !important;
-    left: 12px !important;
-    right: 12px !important;
-    top: auto !important;
-    width: auto !important;
-    border-radius: 18px;
-    padding: 16px;
-  }
-  .mood-emoji-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 22px;
-  }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -600,8 +393,8 @@ a,
    TODAY VIEW CHECKBOXES
 ──────────────────────────────────────────────────────────────── */
 .today-chk {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
   border: 1.5px solid var(--border-hi);
   background: transparent;
@@ -611,10 +404,6 @@ a,
   justify-content: center;
   transition: all 0.13s;
   font-size: 14px;
-  /* Accessible touch target */
-  min-width: 44px;
-  min-height: 44px;
-  border-radius: 10px;
 }
 .today-chk:hover {
   border-color: var(--green);
@@ -629,7 +418,7 @@ a,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   LIGHT THEME — targeted overrides
+   LIGHT THEME — targeted overrides for tables
 ──────────────────────────────────────────────────────────────── */
 [data-theme="light"] .cal-th-week {
   background: var(--bg-surface);
@@ -653,6 +442,7 @@ a,
   border-color: #059669;
   background: rgba(5, 150, 105, 0.08);
 }
+/* CRITICAL: light mode done must win over hover — use !important */
 [data-theme="light"] .chk.done {
   background: linear-gradient(135deg, #059669, #34d399) !important;
   border-color: transparent !important;
@@ -662,6 +452,7 @@ a,
   background: linear-gradient(135deg, #059669, #34d399) !important;
   border-color: transparent !important;
 }
+/* Instant active state so click feels immediate before React re-renders */
 [data-theme="light"] .chk:active {
   background: rgba(5, 150, 105, 0.2) !important;
   border-color: #059669 !important;
@@ -686,17 +477,6 @@ a,
   background: #f9fafb;
   border-color: #e5e7eb;
 }
-[data-theme="light"] .mobile-bottom-nav {
-  background: rgba(241, 243, 248, 0.97);
-  border-top-color: rgba(0, 0, 0, 0.1);
-}
-[data-theme="light"] .mobile-drawer {
-  background: #fff;
-  border-left-color: rgba(0, 0, 0, 0.1);
-}
-[data-theme="light"] .mobile-drawer-header {
-  background: #fff;
-}
 
 /* ─────────────────────────────────────────────────────────────
    ANIMATIONS
@@ -715,17 +495,6 @@ a,
   animation: slideUp 0.22s ease;
 }
 
-@keyframes slideUpFull {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -739,7 +508,7 @@ a,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   INTERACTION SURFACE TOKENS
+   INTERACTION SURFACE TOKENS  (theme-aware hover/bg helpers)
 ──────────────────────────────────────────────────────────────── */
 :root {
   --surface-1: rgba(255, 255, 255, 0.04);
@@ -763,6 +532,7 @@ a,
   --chart-grid: rgba(0, 0, 0, 0.06);
 }
 
+/* Light mode: card and card-hi need explicit light backgrounds */
 [data-theme="light"] .card {
   background: #ffffff;
   border-color: rgba(0, 0, 0, 0.08);
@@ -774,6 +544,8 @@ a,
 [data-theme="light"] .surface {
   background: var(--bg-surface);
 }
+
+/* Light mode text helpers */
 [data-theme="light"] .t1 {
   color: #111827;
 }
@@ -783,15 +555,20 @@ a,
 [data-theme="light"] .t3 {
   color: #6b7280;
 }
+
+/* Light mode progress/track bars */
 [data-theme="light"] .track-bar {
   background: rgba(0, 0, 0, 0.08) !important;
 }
+
+/* Light mode chart grid lines */
 [data-theme="light"] canvas {
   filter: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   BUTTON / INTERACTIVE UTILITY CLASSES
+   BUTTON / INTERACTIVE SURFACE UTILITY CLASSES
+   Use these instead of inline onMouseEnter rgba() hacks
 ──────────────────────────────────────────────────────────────── */
 .btn-ghost {
   background: var(--surface-1);
@@ -800,8 +577,6 @@ a,
   transition:
     background 0.13s,
     color 0.13s;
-  /* Ensure minimum tap target */
-  min-height: 40px;
 }
 .btn-ghost:hover {
   background: var(--surface-3);
@@ -823,7 +598,7 @@ a,
   border-color: var(--border-hi);
 }
 
-/* Pill toggle */
+/* Pill toggle in BulkCheckin / TodayPanel / YesterdayView */
 .toggle-track {
   position: relative;
   width: 28px;
@@ -856,10 +631,12 @@ a,
   left: 14px;
 }
 
+/* Progress track background */
 .progress-track {
   background: var(--track-bg);
 }
 
+/* Filter/view pill active state */
 .pill-active-filter {
   background: var(--surface-3);
   color: var(--text-1);
@@ -878,6 +655,7 @@ a,
   border-color: var(--border);
 }
 
+/* Close / icon button */
 .icon-btn {
   display: flex;
   align-items: center;
@@ -888,9 +666,6 @@ a,
   transition:
     background 0.13s,
     color 0.13s;
-  /* Accessible touch target */
-  min-width: 36px;
-  min-height: 36px;
 }
 .icon-btn:hover {
   background: var(--surface-3);
@@ -941,16 +716,18 @@ a,
     chkPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
     chkRipple 0.45s ease-out;
 }
+
 .chk.unpop-anim {
   animation: chkUnpop 0.18s ease-out;
 }
 
-/* Particle burst */
+/* Particle burst — tiny dots that fly out on check */
 .chk-burst {
   position: absolute;
   pointer-events: none;
   z-index: 100;
 }
+
 .chk-burst span {
   position: absolute;
   width: 5px;
@@ -958,6 +735,7 @@ a,
   border-radius: 50%;
   animation: burstFly 0.5s ease-out forwards;
 }
+
 @keyframes burstFly {
   0% {
     transform: translate(0, 0) scale(1);
@@ -969,6 +747,7 @@ a,
   }
 }
 
+/* Today checklist pop */
 @keyframes todayChkPop {
   0% {
     transform: scale(1);
@@ -980,10 +759,12 @@ a,
     transform: scale(1);
   }
 }
+
 .today-chk.pop-anim {
   animation: todayChkPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Kit card hover glow */
 @keyframes kitCardPulse {
   0%,
   100% {
@@ -992,163 +773,4 @@ a,
   50% {
     box-shadow: 0 0 18px var(--kit-glow);
   }
-}
-
-/* ─────────────────────────────────────────────────────────────
-   RESPONSIVE BREAKPOINTS
-──────────────────────────────────────────────────────────────── */
-
-/* Show mobile bottom nav + add bottom clearance on mobile */
-@media (max-width: 767px) {
-  .mobile-bottom-nav {
-    display: block;
-  }
-  .mobile-page-clearance {
-    padding-bottom: var(--mobile-nav-bottom);
-  }
-
-  /* Compact top nav on mobile */
-  .glass-nav {
-    padding: 0 12px;
-    height: 52px;
-  }
-
-  /* Full-width cards on mobile, no side padding needed */
-  .app-root .card {
-    border-radius: 16px;
-  }
-
-  /* Calendar label column slimmer on mobile */
-  .cal-th-label,
-  .cal-td-label {
-    min-width: 110px;
-    max-width: 130px;
-    font-size: 11px;
-  }
-
-  /* Calendar check cells slightly smaller */
-  .chk {
-    width: 24px;
-    height: 24px;
-  }
-
-  /* MentalState table — allow scrolling, don't squash */
-  .mental-state-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* CommandBar — wraps on mobile */
-  .command-bar-inner {
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 8px 12px;
-  }
-
-  /* Freeze banner stacks */
-  .freeze-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  /* Main grid: single column on mobile */
-  .main-two-col {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Sidebar becomes hidden drawer on mobile */
-  .sidebar-desktop {
-    display: none;
-  }
-}
-
-/* Tablet adjustments */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .main-two-col {
-    grid-template-columns: 1fr 280px !important;
-  }
-}
-
-/* Hide mobile-only elements on desktop */
-@media (min-width: 768px) {
-  .mobile-only {
-    display: none !important;
-  }
-  .mobile-bottom-nav {
-    display: none !important;
-  }
-  .mobile-page-clearance {
-    padding-bottom: 0;
-  }
-}
-
-/* Hide desktop-only elements on mobile */
-@media (max-width: 767px) {
-  .desktop-only {
-    display: none !important;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────
-   XS BREAKPOINT UTILITIES  (375px — Tailwind custom `xs:` classes)
-   These are needed because the custom xs breakpoint may not compile
-   without a full Tailwind build. We define them as plain CSS here.
-──────────────────────────────────────────────────────────────── */
-
-/* xs:hidden — hide below 375px (show on 375px+) */
-@media (max-width: 374px) {
-  .xs\:hidden {
-    display: none !important;
-  }
-  .xs\:inline {
-    display: none !important;
-  }
-  .xs\:block {
-    display: none !important;
-  }
-  .xs\:flex {
-    display: none !important;
-  }
-}
-
-/* xs:inline, xs:block, xs:flex — show on 375px+ */
-@media (min-width: 375px) {
-  .xs\:hidden {
-    display: none !important;
-  }
-  .xs\:inline {
-    display: inline !important;
-  }
-  .xs\:block {
-    display: block !important;
-  }
-  .xs\:flex {
-    display: flex !important;
-  }
-  /* xs:px-4 */
-  .xs\:px-4 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-  /* xs:inline means: hidden by default, shown at xs+ */
-  .hidden.xs\:inline {
-    display: inline !important;
-  }
-  .hidden.xs\:block {
-    display: block !important;
-  }
-  .hidden.xs\:flex {
-    display: flex !important;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────
-   BG VARIABLE ALIASES  (some components use --bg, others --bg-card)
-   Ensure both naming conventions work.
-──────────────────────────────────────────────────────────────── */
-:root {
-  --bg: var(--bg-app);
-  /* Aliases used in some components */
-  --surface-0: var(--bg-card);
 }
