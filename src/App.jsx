@@ -15,11 +15,71 @@ import HabitModal from "./features/habits/HabitModal";
 import TodayPanel from "./features/habits/TodayPanel";
 import EmptyState from "./features/habits/EmptyState";
 import Toast, { showToast } from "./components/ui/Toast";
+import ConfirmModal from "./components/ConfirmModal";
 import useHabitStore from "./store/habitStore";
 import { useTheme } from "./hooks/useTheme";
 import { useConfetti } from "./hooks/useConfetti";
 import { todayStr } from "./utils/dateUtils";
 
+// ── Error Boundary ────────────────────────────────────────────────
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error("App error boundary caught:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            gap: 16,
+            background: "var(--bg)",
+            padding: 24,
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontSize: 48 }}>⚠️</div>
+          <h2 style={{ color: "var(--text-1)", fontWeight: 700, fontSize: 20 }}>
+            Something went wrong
+          </h2>
+          <p style={{ color: "var(--text-2)", fontSize: 14, maxWidth: 360 }}>
+            An unexpected error occurred. Your data is safe — please reload the
+            page.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "10px 24px",
+              borderRadius: 12,
+              fontWeight: 600,
+              fontSize: 14,
+              cursor: "pointer",
+              background: "rgba(52,211,153,0.12)",
+              color: "var(--green)",
+              border: "1px solid rgba(52,211,153,0.3)",
+            }}
+          >
+            Reload page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// ── Main App Content ──────────────────────────────────────────────
 function AppContent() {
   const habits = useHabitStore((s) => s.habits);
   const completions = useHabitStore((s) => s.completions);
@@ -32,6 +92,8 @@ function AppContent() {
 
   const [showHabitModal, setShowHabitModal] = useState(false);
   const [showToday, setShowToday] = useState(false);
+  const [confirm, setConfirm] = useState(null); // { title, message, onConfirm }
+
   const { canvasRef, trigger: triggerConfetti } = useConfetti();
   useTheme();
 
@@ -46,12 +108,22 @@ function AppContent() {
     }
   }, [completions]);
 
+  // Replaces window.confirm for habit removal
   const handleRemove = (id) => {
     const h = habits.find((x) => x.id === id);
-    if (!h || !window.confirm(`Remove "${h.name}"?`)) return;
-    removeHabit(id);
-    saveUserData();
-    showToast("🗑 Habit removed.");
+    if (!h) return;
+    setConfirm({
+      title: `Remove "${h.name}"?`,
+      message: "This habit and all its history will be deleted.",
+      confirmLabel: "Remove",
+      danger: true,
+      onConfirm: () => {
+        removeHabit(id);
+        saveUserData();
+        showToast("🗑 Habit removed.");
+        setConfirm(null);
+      },
+    });
   };
 
   const handleAdd = (name, emoji, category, board) => {
@@ -92,10 +164,8 @@ function AppContent() {
       {/* ── Banners row ── */}
       {(showToday || streakFreezes > 0) && (
         <div className="px-5 pt-4 flex flex-col gap-2">
-          {/* Today quick-log panel */}
           {showToday && <TodayPanel onClose={() => setShowToday(false)} />}
 
-          {/* Freeze banner */}
           {streakFreezes > 0 && (
             <div
               className="flex items-center justify-between px-4 py-2.5 rounded-xl slide-up"
@@ -138,9 +208,8 @@ function AppContent() {
         className="grid gap-5 px-5 pt-5 pb-0"
         style={{ gridTemplateColumns: "1fr 340px" }}
       >
-        {/* LEFT col — Calendar + sub-sections below it */}
+        {/* LEFT col */}
         <div className="flex flex-col gap-4 min-w-0">
-          {/* Calendar card */}
           <div className="card rounded-2xl p-5 slide-up">
             {habits.length === 0 ? (
               <EmptyState onAddHabit={() => setShowHabitModal(true)} />
@@ -166,7 +235,6 @@ function AppContent() {
             </button>
           </div>
 
-          {/* Mental State — collapsible */}
           <Collapsible
             title="🧠 Mental State"
             defaultOpen
@@ -174,8 +242,6 @@ function AppContent() {
           >
             <MentalStatePanel />
           </Collapsible>
-
-          {/* Daily Progress chart — collapsible */}
           <Collapsible
             title="📈 Daily Progress"
             defaultOpen
@@ -183,8 +249,6 @@ function AppContent() {
           >
             <ProgressChart />
           </Collapsible>
-
-          {/* Habit Progress Rings — between chart and XP */}
           <Collapsible
             title="🎯 Habit Progress Rings"
             defaultOpen
@@ -192,8 +256,6 @@ function AppContent() {
           >
             <ProgressRings />
           </Collapsible>
-
-          {/* XP & Level Card — collapsible */}
           <Collapsible
             title="⚔️ XP & Level"
             defaultOpen
@@ -203,16 +265,15 @@ function AppContent() {
           </Collapsible>
         </div>
 
-        {/* RIGHT col — Sidebar */}
+        {/* RIGHT col */}
         <Sidebar onRemoveHabit={handleRemove} />
       </div>
 
-      {/* ── Deep Analytics (full width, collapsible) ── */}
+      {/* ── Deep Analytics ── */}
       <div className="px-0 pt-5">
         <AnalyticsFooter />
       </div>
 
-      {/* ── Footer ── */}
       <AppFooter />
 
       <HabitModal
@@ -221,14 +282,28 @@ function AppContent() {
         onAdd={handleAdd}
       />
       <Toast />
+
+      {/* ── Confirm dialog (replaces window.confirm) ── */}
+      {confirm && (
+        <ConfirmModal
+          title={confirm.title}
+          message={confirm.message}
+          confirmLabel={confirm.confirmLabel}
+          danger={confirm.danger}
+          onConfirm={confirm.onConfirm}
+          onCancel={() => setConfirm(null)}
+        />
+      )}
     </div>
   );
 }
 
 export default function App() {
   return (
-    <AuthGuard>
-      <AppContent />
-    </AuthGuard>
+    <ErrorBoundary>
+      <AuthGuard>
+        <AppContent />
+      </AuthGuard>
+    </ErrorBoundary>
   );
 }

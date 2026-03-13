@@ -4,3 +4,7 @@ dist
 
 *.local
 .DS_Store
+# Local Environment Variables
+.env
+.env.local
+supabase/.env
