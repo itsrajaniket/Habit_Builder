@@ -23,10 +23,10 @@ export default function CommandBar({ onOpenToday }) {
       {/* Main bar */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 8,
-        padding: '8px 20px', flexWrap: 'nowrap',
+        padding: '8px 12px', flexWrap: 'wrap',
       }}>
         {/* Board quick pills — just the 4 boards, compact */}
-        <div style={{ display: 'flex', gap: 4, flex: 1, overflowX: 'auto', paddingBottom: 1 }}>
+        <div style={{ display: 'flex', gap: 4, flex: '1 1 auto', overflowX: 'auto', paddingBottom: 1, minWidth: 160 }} className="scrollbar-hide">
           {BOARDS.map(b => {
             const active = activeBoard === b.value;
             return (

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import useHabitStore from "../store/habitStore";
 import { useRazorpay } from "../hooks/useRazorpay";
 
@@ -28,8 +29,8 @@ const PRO_FEATURES = [
 ];
 
 const FREE_FEATURES = [
-  { icon: "✅", label: "Unlimited habits" },
-  { icon: "✅", label: "Calendar view" },
+  { icon: "✅", label: "Up to 5 habits" },
+  { icon: "✅", label: "Calendar view only" },
   { icon: "✅", label: "Basic streaks" },
 ];
 
@@ -110,7 +111,7 @@ export default function PricingModal({ onClose }) {
         ? "1-Week Trial"
         : proPlan;
 
-  return (
+  return createPortal(
     <>
       {/* ── Backdrop ── */}
       <div
@@ -343,6 +344,7 @@ export default function PricingModal({ onClose }) {
           {toast.msg}
         </div>
       )}
-    </>
+    </>,
+    document.body
   );
 }

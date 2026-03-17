@@ -67,8 +67,24 @@ export default function HabitModal({ isOpen, onClose, onAdd }) {
 
   const addHabit     = useHabitStore(s => s.addHabit);
   const saveUserData = useHabitStore(s => s.saveUserData);
+  const habits       = useHabitStore(s => s.habits);
+  const isPro        = useHabitStore(s => s.isPro);
+
+  const isLimitReached = !isPro && habits.length >= 5;
+
+  const [showPricing, setShowPricing] = useState(false);
+  const [PricingModalComponent, setPricingModalComponent] = useState(null);
+
+  const handleUpgradeClick = async () => {
+    if (!PricingModalComponent) {
+      const mod = await import('../../components/PricingModal');
+      setPricingModalComponent(() => mod.default);
+    }
+    setShowPricing(true);
+  };
 
   const handleAdd = () => {
+    if (isLimitReached) return;
     if (!name.trim()) { setNameError(true); setTimeout(() => setNameError(false), 2000); return; }
     onAdd(name.trim(), emoji, category, board);
     setName(''); setEmoji('⏰'); setCategory('health'); setBoard('all');
@@ -76,6 +92,11 @@ export default function HabitModal({ isOpen, onClose, onAdd }) {
   };
 
   const handleLoadKit = (kit) => {
+    if (!isPro && habits.length + kit.habits.length > 5) {
+      showToast(`Free plan limit (5 habits) exceeded. Upgrade to Pro to add this kit.`, 'error');
+      handleUpgradeClick();
+      return;
+    }
     kit.habits.forEach(h => addHabit(h.name, h.emoji, h.category, h.board));
     saveUserData();
     showToast(`${kit.icon} ${kit.name} kit loaded — ${kit.habits.length} habits added!`);
@@ -186,14 +207,25 @@ export default function HabitModal({ isOpen, onClose, onAdd }) {
           {/* Buttons */}
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={handleClose} className="btn-ghost flex-1 py-2 rounded-xl text-sm font-semibold">Cancel</button>
-            <button onClick={handleAdd}
-              style={{
-                flex: 1, padding: '9px 0', borderRadius: 10, fontSize: 13, fontWeight: 800,
-                background: 'var(--green)', color: '#000', border: 'none', cursor: 'pointer',
-                boxShadow: '0 0 18px var(--green-glow)',
-              }}>
-              ＋ Add Habit
-            </button>
+            {isLimitReached ? (
+              <button onClick={handleUpgradeClick}
+                style={{
+                  flex: 1, padding: '9px 0', borderRadius: 10, fontSize: 13, fontWeight: 800,
+                  background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)', color: '#fff', border: 'none', cursor: 'pointer',
+                  boxShadow: '0 0 18px rgba(139,92,246,0.4)',
+                }}>
+                ⭐ Upgrade to Add More
+              </button>
+            ) : (
+              <button onClick={handleAdd}
+                style={{
+                  flex: 1, padding: '9px 0', borderRadius: 10, fontSize: 13, fontWeight: 800,
+                  background: 'var(--green)', color: '#000', border: 'none', cursor: 'pointer',
+                  boxShadow: '0 0 18px var(--green-glow)',
+                }}>
+                ＋ Add Habit
+              </button>
+            )}
           </div>
         </>
       )}
@@ -214,6 +246,10 @@ export default function HabitModal({ isOpen, onClose, onAdd }) {
             Cancel
           </button>
         </>
+      )}
+      {/* Pricing Modal Overlay */}
+      {showPricing && PricingModalComponent && (
+        <PricingModalComponent onClose={() => setShowPricing(false)} />
       )}
     </Modal>
   );

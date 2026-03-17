@@ -16,7 +16,7 @@ export default function HabitRowHeader({ habit, onRemove }) {
 
   return (
     <td className="cal-td-label" style={{ borderLeft: `3px solid ${cat.accent}` }}>
-      <div className="flex items-center gap-1.5 px-2 py-1 group">
+      <div className="flex items-center gap-1 px-1 py-1 group">
         <span className="t3 cursor-grab text-xs select-none shrink-0 transition-colors group-hover:t2">⠿</span>
 
         {editing ? (

@@ -29,12 +29,12 @@ export default function GlobalNav() {
   return (
     <>
       <nav
-        className="glass-nav sticky top-0 z-50 flex items-center gap-4 px-5 py-3"
+        className="glass-nav sticky top-0 z-50 flex items-center gap-2 md:gap-4 px-3 md:px-5 py-3"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div className="flex items-center gap-2.5 mr-auto">
-          <span className="text-2xl">🎯</span>
-          <span className="font-extrabold text-sm tracking-tight t1">
+          <span className="text-2xl hidden sm:inline">🎯</span>
+          <span className="font-extrabold text-sm tracking-tight t1 truncate">
             Habit Builder Kit
           </span>
         </div>

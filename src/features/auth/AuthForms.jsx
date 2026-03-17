@@ -1,7 +1,7 @@
 // src/features/auth/AuthForms.jsx
 import React, { useState, useCallback, useEffect, useId } from "react";
 import useHabitStore from "../../store/habitStore";
-import { TESTIMONIALS, BENEFIT_BULLETS } from "./landingData";
+import { TESTIMONIALS, BENEFIT_BULLETS, BRAND_NAME } from "./landingData";
 
 // --- REUSABLE UI ---
 function Field({ label, type, value, onChange, placeholder, children, icon }) {
@@ -17,7 +17,7 @@ function Field({ label, type, value, onChange, placeholder, children, icon }) {
             fontWeight: 700,
             textTransform: "uppercase",
             letterSpacing: "0.1em",
-            color: "#64748b",
+            color: "#94a3b8",
           }}
         >
           {label}
@@ -318,7 +318,7 @@ function SignInForm({ onSwitch }) {
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "0.1em",
-              color: "#64748b",
+              color: "#94a3b8",
             }}
           >
             Password
@@ -732,7 +732,7 @@ export default function AuthView({ view, setView }) {
         >
           <span style={{ fontSize: "22px" }}>🎯</span>
           <span style={{ fontWeight: 900, fontSize: "14px", color: "#94a3b8" }}>
-            Habit Builder Kit
+            {BRAND_NAME}
           </span>
         </div>
         <div

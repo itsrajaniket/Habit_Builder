@@ -774,3 +774,58 @@ body {
     box-shadow: 0 0 18px var(--kit-glow);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE RESPONSIVE OVERRIDES
+──────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Calendar Table */
+  .cal-th-label,
+  .cal-td-label {
+    min-width: 125px;
+    max-width: 140px;
+    font-size: 11px;
+    padding-left: 6px !important;
+  }
+  .cal-th-week {
+    font-size: 9px;
+    padding: 4px 2px;
+  }
+  .cal-th-dow {
+    font-size: 8px;
+    padding: 2px 1px;
+  }
+  .cal-th-day {
+    font-size: 9px;
+    padding: 2px 1px;
+  }
+  .cal-td {
+    padding: 1px;
+  }
+  .cal-summary td {
+    font-size: 8px;
+  }
+  .cal-summary td:first-child {
+    padding-left: 6px;
+  }
+  
+  /* Checkboxes */
+  .chk {
+    width: 20px;
+    height: 20px;
+  }
+  .today-chk {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  /* Command Bar pill scrollbar hide */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

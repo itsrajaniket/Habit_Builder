@@ -3,7 +3,14 @@ import React, { useState, useEffect, useRef } from "react";
 import useHabitStore from "../../store/habitStore";
 import AuthView from "./AuthForms";
 import {
+  BRAND_NAME,
   HEADLINE_WORDS,
+  HERO_SUBTITLE,
+  VALUE_PROP,
+  PAIN_POINTS,
+  PILLARS,
+  DIFFERENCES,
+  AUDIENCE,
   FEATURES,
   STEPS,
   ALL_TESTIMONIALS,
@@ -135,11 +142,11 @@ function CinematicHeadline({ delay = 0 }) {
   return (
     <h1
       style={{
-        fontSize: "clamp(38px,4.5vw,64px)",
+        fontSize: "clamp(38px,5vw,64px)",
         fontWeight: 900,
-        lineHeight: 1.06,
-        letterSpacing: "-0.04em",
-        margin: "0 0 22px",
+        lineHeight: 1.08,
+        letterSpacing: "-0.05em",
+        margin: "0 0 18px",
         color: "#f1f5f9",
       }}
     >
@@ -157,12 +164,12 @@ function CinematicHeadline({ delay = 0 }) {
                 "opacity 0.4s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1)",
               ...(isAccent
                 ? {
-                    background:
-                      "linear-gradient(135deg, #34d399 0%, #06b6d4 50%, #818cf8 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }
+                  background:
+                    "linear-gradient(135deg, #34d399 0%, #06b6d4 50%, #818cf8 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }
                 : { color: "#f1f5f9" }),
             }}
           >
@@ -174,7 +181,7 @@ function CinematicHeadline({ delay = 0 }) {
   );
 }
 
-function AppMockup({ activeFeature }) {
+function AppMockup({ activeFeature, isMobile }) {
   const [displayed, setDisplayed] = useState(activeFeature);
   const [fading, setFading] = useState(false);
   useEffect(() => {
@@ -268,37 +275,16 @@ function AppMockup({ activeFeature }) {
             alt={feat.label}
             style={{
               width: "100%",
-              height: "auto",
+              height: isMobile ? "280px" : "340px",
               display: "block",
-              maxHeight: "320px",
-              objectFit: "cover",
-              objectPosition: "top center",
+              objectFit: "contain",
+              objectPosition: "center",
               opacity: fading ? 0 : 1,
-              transform: fading ? "scale(1.015)" : "scale(1)",
-              transition: "opacity 0.18s ease, transform 0.18s ease",
+              transform: fading ? "translateY(8px) scale(0.98)" : "none",
+              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+              background: "#0b0f19",
             }}
           />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              left: "12px",
-              padding: "4px 10px",
-              borderRadius: "99px",
-              background: "rgba(8,13,24,0.85)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(52,211,153,0.25)",
-              fontSize: "10px",
-              fontWeight: 700,
-              color: "#34d399",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              opacity: fading ? 0 : 1,
-              transition: "opacity 0.18s ease",
-            }}
-          >
-            {feat.icon} {feat.label}
-          </div>
           <div
             style={{
               position: "absolute",
@@ -462,7 +448,7 @@ function PricingSection({ visible, isMobile, onGetStarted }) {
         transition: "opacity 0.8s ease 0.4s",
       }}
     >
-      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1300px", margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <p
             style={{
@@ -478,17 +464,17 @@ function PricingSection({ visible, isMobile, onGetStarted }) {
           </p>
           <h2
             style={{
-              fontSize: isMobile ? "26px" : "34px",
+              fontSize: isMobile ? "26px" : "36px",
               fontWeight: 900,
               color: "#f1f5f9",
-              letterSpacing: "-0.03em",
-              margin: "0 0 10px",
+              letterSpacing: "-0.04em",
+              margin: "0 0 12px",
             }}
           >
             Start free. Go Pro for ₹99.
           </h2>
           <p style={{ fontSize: "14px", color: "#64748b", margin: 0 }}>
-            One-time payment. No subscriptions. No dark patterns.
+            Choose between a 1-week trial or one-time lifetime access. No subscriptions.
           </p>
         </div>
         <div
@@ -512,19 +498,21 @@ function PricingSection({ visible, isMobile, onGetStarted }) {
                   padding: "28px 24px",
                   borderRadius: "20px",
                   background: isPop
-                    ? "linear-gradient(160deg, rgba(20,15,40,0.95) 0%, rgba(15,10,30,0.98) 100%)"
-                    : "rgba(15,23,42,0.6)",
+                    ? "linear-gradient(160deg, rgba(20,15,40,0.98) 0%, rgba(15,10,30,0.99) 100%)"
+                    : "rgba(15,23,42,0.65)",
                   border: isPop
-                    ? "1.5px solid rgba(52,211,153,0.45)"
+                    ? "1.5px solid rgba(52,211,153,0.5)"
                     : isHov
-                      ? "1px solid rgba(51,65,85,0.7)"
-                      : "1px solid rgba(51,65,85,0.35)",
+                      ? "1px solid rgba(51,65,85,0.8)"
+                      : "1px solid rgba(51,65,85,0.4)",
                   boxShadow: isPop
-                    ? "0 0 40px rgba(52,211,153,0.12), inset 0 1px 0 rgba(52,211,153,0.08)"
-                    : "none",
-                  backdropFilter: "blur(12px)",
-                  transform: isHov ? "translateY(-4px)" : "none",
-                  transition: "all 0.25s cubic-bezier(0.34,1.56,0.64,1)",
+                    ? "0 0 50px rgba(52,211,153,0.15), inset 0 1px 0 rgba(255,255,255,0.05)"
+                    : isHov
+                      ? "0 10px 30px rgba(0,0,0,0.3)"
+                      : "none",
+                  backdropFilter: "blur(16px)",
+                  transform: isHov ? "translateY(-6px)" : "none",
+                  transition: "all 0.3s cubic-bezier(0.34,1.56,0.64,1)",
                 }}
               >
                 {isPop && (
@@ -682,7 +670,7 @@ function FAQSection({ visible, isMobile }) {
         transition: "opacity 0.8s ease 0.4s",
       }}
     >
-      <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <p
             style={{
@@ -698,46 +686,74 @@ function FAQSection({ visible, isMobile }) {
           </p>
           <h2
             style={{
-              fontSize: isMobile ? "26px" : "32px",
+              fontSize: isMobile ? "26px" : "36px",
               fontWeight: 900,
               color: "#f1f5f9",
-              letterSpacing: "-0.03em",
+              letterSpacing: "-0.04em",
               margin: 0,
             }}
           >
             Questions? Answers.
           </h2>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {FAQ_ITEMS.map((item, i) => {
             const isOpen = open === i;
             return (
-              <div key={i} className={`lp-faq-item${isOpen ? " lp-open" : ""}`}>
+              <div
+                key={i}
+                className={`lp-faq-item${isOpen ? " lp-open" : ""}`}
+                style={{
+                  background: isOpen ? "rgba(255,255,255,0.02)" : "transparent",
+                  transition: "all 0.3s ease",
+                }}
+              >
                 <button
                   className="lp-faq-btn"
                   onClick={() => setOpen(isOpen ? null : i)}
+                  style={{
+                    padding: isOpen ? "20px 24px 14px" : "18px 24px",
+                  }}
                 >
-                  <span style={{ lineHeight: 1.45 }}>{item.q}</span>
                   <span
+                    style={{
+                      lineHeight: 1.5,
+                      fontWeight: 700,
+                      fontSize: "15px",
+                      color: isOpen ? "#f1f5f9" : "#cbd5e1",
+                    }}
+                  >
+                    {item.q}
+                  </span>
+                  <div
                     className="lp-faq-icon"
                     style={{
-                      transform: isOpen ? "rotate(45deg)" : "none",
+                      transform: isOpen ? "rotate(135deg)" : "none",
                       background: isOpen
-                        ? "rgba(52,211,153,0.12)"
-                        : "rgba(30,41,59,0.6)",
-                      color: isOpen ? "#34d399" : "#64748b",
+                        ? "rgba(52,211,153,0.15)"
+                        : "rgba(51,65,85,0.3)",
+                      color: isOpen ? "#34d399" : "#94a3b8",
+                      width: "28px",
+                      height: "28px",
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "14px",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     +
-                  </span>
+                  </div>
                 </button>
                 <div className={`lp-faq-answer${isOpen ? " lp-open" : ""}`}>
                   <p
                     style={{
-                      fontSize: "13px",
-                      color: "#64748b",
-                      lineHeight: 1.7,
+                      fontSize: "14px",
+                      color: "#94a3b8",
+                      lineHeight: 1.75,
                       margin: 0,
+                      padding: "0 4px 6px 0",
                     }}
                   >
                     {item.a}
@@ -746,6 +762,582 @@ function FAQSection({ visible, isMobile }) {
               </div>
             );
           })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PillarsSection({ visible, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "60px 24px" : "80px 64px",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.8s ease 0.3s",
+        background: "rgba(10,10,18,0.3)",
+      }}
+    >
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "#475569",
+              marginBottom: "12px",
+            }}
+          >
+            ✦ Why {BRAND_NAME}?
+          </p>
+          <h2
+            style={{
+              fontSize: isMobile ? "28px" : "36px",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.04em",
+              margin: 0,
+            }}
+          >
+            Master your day, one tile at a time.
+          </h2>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+            gap: "24px",
+          }}
+        >
+          {PILLARS.map((p) => (
+            <div
+              key={p.title}
+              style={{
+                padding: "32px",
+                borderRadius: "24px",
+                background: "rgba(15,23,42,0.4)",
+                border: "1px solid rgba(51,65,85,0.3)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div style={{ fontSize: "32px", marginBottom: "20px" }}>
+                {p.icon}
+              </div>
+              <h3
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 800,
+                  color: "#f1f5f9",
+                  marginBottom: "12px",
+                }}
+              >
+                {p.title}
+              </h3>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: "#64748b",
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}
+              >
+                {p.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DifferenceSection({ visible, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "60px 24px" : "80px 64px",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.8s ease 0.4s",
+        borderTop: "1px solid rgba(51,65,85,0.15)",
+      }}
+    >
+      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "#475569",
+              marginBottom: "12px",
+            }}
+          >
+            ✦ The Difference
+          </p>
+          <h2
+            style={{
+              fontSize: isMobile ? "28px" : "36px",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.04em",
+              margin: 0,
+            }}
+          >
+            What Makes Us Different?
+          </h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
+          {DIFFERENCES.map((d) => (
+            <div
+              key={d.feature}
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "180px 1fr",
+                gap: isMobile ? "8px" : "20px",
+                alignItems: "center",
+                padding: "20px 24px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(51,65,85,0.2)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{ fontSize: "18px" }}>{d.icon}</span>
+                <span
+                  style={{ fontSize: "13px", fontWeight: 800, color: "#f1f5f9" }}
+                >
+                  {d.feature}
+                </span>
+              </div>
+              <div style={{ fontSize: "14px", color: "#64748b" }}>
+                {d.experience}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AudienceSection({ visible, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "60px 24px" : "80px 64px",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.8s ease 0.5s",
+        background:
+          "linear-gradient(to bottom, transparent, rgba(52,211,153,0.02))",
+      }}
+    >
+      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "#475569",
+              marginBottom: "12px",
+            }}
+          >
+            ✦ For You
+          </p>
+          <h2
+            style={{
+              fontSize: isMobile ? "28px" : "36px",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.04em",
+              margin: 0,
+            }}
+          >
+            Is This For You?
+          </h2>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+            gap: "20px",
+          }}
+        >
+          {AUDIENCE.map((a) => (
+            <div
+              key={a.title}
+              style={{
+                textAlign: "center",
+                padding: "32px 24px",
+                borderRadius: "24px",
+                background: "rgba(10,10,18,0.4)",
+                border: "1.5px solid rgba(51,65,85,0.4)",
+              }}
+            >
+              <div style={{ fontSize: "40px", marginBottom: "16px" }}>
+                {a.icon}
+              </div>
+              <h3
+                style={{
+                  fontSize: "17px",
+                  fontWeight: 900,
+                  color: "#f1f5f9",
+                  marginBottom: "8px",
+                }}
+              >
+                {a.title}
+              </h3>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: "#64748b",
+                  margin: 0,
+                }}
+              >
+                {a.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ValuePropSection({ visible, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "80px 24px" : "110px 64px",
+        textAlign: "center",
+        position: "relative",
+        overflow: "hidden",
+        background: "#080d18",
+      }}
+    >
+      {/* Premium Noise Texture */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: 0.03,
+          pointerEvents: "none",
+          zIndex: 1,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Floating Geometric Accents */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "20%",
+            left: "15%",
+            width: "120px",
+            height: "1px",
+            background: "linear-gradient(90deg, #34d399, transparent)",
+            transform: "rotate(-35deg)",
+            opacity: visible ? 0.4 : 0,
+            transition: "all 1.5s ease 0.5s",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "30%",
+            right: "10%",
+            width: "80px",
+            height: "80px",
+            borderRadius: "50%",
+            border: "1px solid rgba(244, 63, 94, 0.3)",
+            opacity: visible ? 0.3 : 0,
+            transform: visible ? "scale(1)" : "scale(0.5)",
+            transition: "all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "60%",
+            left: "10%",
+            width: "40px",
+            height: "40px",
+            background: "rgba(99, 102, 241, 0.15)",
+            borderRadius: "8px",
+            transform: visible ? "rotate(45deg)" : "rotate(0deg)",
+            opacity: visible ? 0.4 : 0,
+            transition: "all 1s ease 1s",
+          }}
+        />
+      </div>
+
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "8px 20px",
+            borderRadius: "99px",
+            background: "rgba(255, 255, 255, 0.03)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            marginBottom: "24px",
+            opacity: visible ? 1 : 0,
+            transition: "all 0.8s ease 0.2s",
+          }}
+        >
+          <span style={{ fontSize: "16px" }}>⚡</span>
+          <span
+            style={{
+              fontSize: "12px",
+              fontWeight: 800,
+              color: "#f1f5f9",
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+            }}
+          >
+            Built for Breakthroughs
+          </span>
+        </div>
+
+        <h2
+          style={{
+            fontSize: isMobile ? "30px" : "42px",
+            fontWeight: 900,
+            lineHeight: 1.1,
+            letterSpacing: "-0.05em",
+            margin: 0,
+            color: "#f1f5f9",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "none" : "translateY(30px)",
+            transition: "all 0.9s cubic-bezier(0.16,1,0.3,1) 0.4s",
+          }}
+        >
+          The only habit tracker designed to help you build{" "}
+          <span
+            style={{
+              background: "linear-gradient(135deg, #34d399 0%, #059669 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              display: "inline-block",
+            }}
+          >
+            momentum
+          </span>{" "}
+          without the{" "}
+          <span
+            style={{
+              background: "linear-gradient(135deg, #fb7185 0%, #e11d48 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              display: "inline-block",
+            }}
+          >
+            burnout.
+          </span>
+          <br />
+          <span style={{ opacity: 0.85 }}>Focus on </span>
+          <span
+            style={{
+              background: "linear-gradient(135deg, #818cf8 0%, #4f46e5 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              display: "inline-block",
+            }}
+          >
+            what matters,
+          </span>{" "}
+          one tile at a time.
+        </h2>
+      </div>
+    </div>
+  );
+}
+
+function PainPointsSection({ visible, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "60px 24px" : "100px 64px",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.8s ease 0.2s",
+        background: "rgba(255,255,255,0.01)",
+      }}
+    >
+      <div style={{ maxWidth: "1300px", margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "#475569",
+              marginBottom: "12px",
+            }}
+          >
+            ✦ Problem Solved
+          </p>
+          <h2
+            style={{
+              fontSize: isMobile ? "28px" : "36px",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.04em",
+              margin: 0,
+            }}
+          >
+            Why Habit Builder Kit?
+          </h2>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+            gap: "24px",
+          }}
+        >
+          {PAIN_POINTS.map((p) => (
+            <div
+              key={p.problem}
+              style={{
+                padding: "28px",
+                borderRadius: "20px",
+                background: "rgba(15,23,42,0.4)",
+                border: "1px solid rgba(51,65,85,0.3)",
+                display: "flex",
+                gap: "20px",
+              }}
+            >
+              <div style={{ fontSize: "32px", marginTop: "4px" }}>{p.icon}</div>
+              <div>
+                <h3
+                  style={{
+                    fontSize: "17px",
+                    fontWeight: 800,
+                    color: "#f1f5f9",
+                    marginBottom: "8px",
+                  }}
+                >
+                  {p.problem}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#64748b",
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {p.solution}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FullFeaturesSection({ visible, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "60px 24px" : "100px 64px",
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.8s ease 0.3s",
+      }}
+    >
+      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "#475569",
+              marginBottom: "12px",
+            }}
+          >
+            ✦ All Features
+          </p>
+          <h2
+            style={{
+              fontSize: isMobile ? "28px" : "36px",
+              fontWeight: 900,
+              color: "#f1f5f9",
+              letterSpacing: "-0.04em",
+              margin: 0,
+            }}
+          >
+            Tools Built for Consistency
+          </h2>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile
+              ? "repeat(2, 1fr)"
+              : "repeat(4, 1fr)",
+            gap: "16px",
+          }}
+        >
+          {FEATURES.map((f) => (
+            <div
+              key={f.label}
+              style={{
+                padding: "24px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(51,65,85,0.2)",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: "32px", marginBottom: "16px" }}>
+                {f.icon}
+              </div>
+              <h3
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 800,
+                  color: "#f1f5f9",
+                  marginBottom: "4px",
+                }}
+              >
+                {f.label}
+              </h3>
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: "#64748b",
+                  margin: 0,
+                }}
+              >
+                {f.desc}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -899,6 +1491,13 @@ function OnboardView({ onDone }) {
 
 function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
   const [activeFeature, setActiveFeature] = useState(0);
+  const [infoFading, setInfoFading] = useState(false);
+
+  useEffect(() => {
+    setInfoFading(true);
+    const t = setTimeout(() => setInfoFading(false), 200);
+    return () => clearTimeout(t);
+  }, [activeFeature]);
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -933,15 +1532,16 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: isMobile ? "16px 20px" : "18px 48px",
-          borderBottom: "1px solid rgba(51,65,85,0.25)",
-          backdropFilter: "blur(20px)",
-          background: "rgba(8,13,24,0.8)",
+          padding: isMobile ? "0 24px" : "0 64px",
+          height: isMobile ? "64px" : "72px",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          backdropFilter: "blur(24px)",
+          background: "rgba(8,13,24,0.7)",
           position: "sticky",
           top: 0,
           zIndex: 100,
           opacity: visible ? 1 : 0,
-          transition: "opacity 0.5s ease",
+          transition: "all 0.5s ease",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -950,7 +1550,7 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
             <span
               style={{ fontWeight: 900, fontSize: "15px", color: "#f1f5f9" }}
             >
-              Habit Builder Kit
+              {BRAND_NAME}
             </span>
           )}
         </div>
@@ -1008,10 +1608,10 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
         style={{
           flex: 1,
           display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          maxWidth: "1280px",
+          gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr",
+          maxWidth: "1400px",
           margin: "0 auto",
-          padding: isMobile ? "48px 24px" : "80px 64px",
+          padding: isMobile ? "48px 24px" : "20px 48px",
           width: "100%",
           alignItems: "center",
         }}
@@ -1022,8 +1622,8 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
             opacity: visible ? 1 : 0,
             transform: visible ? "none" : "translateY(20px)",
             transition: "all 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s",
-            order: isMobile ? 2 : 1,
-            marginTop: isMobile ? "40px" : 0,
+            order: 1,
+            marginTop: isMobile ? "20px" : 0,
           }}
         >
           <div
@@ -1033,7 +1633,7 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
               gap: "8px",
               padding: "5px 14px",
               borderRadius: "99px",
-              marginBottom: "24px",
+              marginBottom: "16px",
               background: "rgba(52,211,153,0.06)",
               border: "1px solid rgba(52,211,153,0.18)",
               fontSize: "12px",
@@ -1057,22 +1657,20 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
           <CinematicHeadline delay={300} />
           <p
             style={{
-              fontSize: isMobile ? "15px" : "17px",
-              color: "#64748b",
-              lineHeight: 1.75,
-              margin: "0 0 40px",
+              fontSize: isMobile ? "15px" : "16px",
+              color: "#94a3b8",
+              lineHeight: 1.7,
+              margin: "0 0 20px",
               maxWidth: "480px",
               opacity: visible ? 1 : 0,
               transition: "opacity 0.7s ease 0.5s",
             }}
           >
-            Track streaks, log your mood, earn XP, and unlock insights you
-            didn't know you needed. The only app that makes habit science feel
-            like a game.
+            {HERO_SUBTITLE}
           </p>
           <div
             style={{
-              marginBottom: "16px",
+              marginBottom: "12px",
               opacity: visible ? 1 : 0,
               transition: "opacity 0.7s ease 0.6s",
             }}
@@ -1105,7 +1703,7 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
             style={{
               opacity: visible ? 1 : 0,
               transition: "opacity 0.7s ease 0.65s",
-              marginBottom: "44px",
+              marginBottom: "32px",
               display: "flex",
               flexDirection: "column",
               gap: "10px",
@@ -1128,7 +1726,7 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
               onClick={onGuestMode}
               style={{
                 fontSize: "13px",
-                color: "#64748b",
+                color: "#94a3b8",
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(51,65,85,0.4)",
                 borderRadius: "10px",
@@ -1163,7 +1761,7 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
                   borderRight: i < 2 ? "1px solid rgba(51,65,85,0.4)" : "none",
                 }}
               >
-                <div style={{ fontSize: "24px", fontWeight: 900, color }}>
+                <div style={{ fontSize: "20px", fontWeight: 900, color }}>
                   {value}
                 </div>
                 <div
@@ -1181,61 +1779,110 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
         </div>
         <div
           style={{
-            order: isMobile ? 1 : 2,
+            order: 2,
             opacity: visible ? 1 : 0,
             transform: visible ? "none" : "translateY(30px)",
             transition: "all 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s",
+            display: "flex",
+            flexDirection: "column",
+            gap: "24px",
           }}
         >
-          <AppMockup activeFeature={activeFeature} />
+          {/* Feature Highlight Text */}
+          <div
+            style={{
+              padding: "12px 16px",
+              borderRadius: "16px",
+              background: "rgba(52,211,153,0.03)",
+              borderLeft: "4px solid #34d399",
+              opacity: infoFading ? 0 : 1,
+              transform: infoFading ? "translateY(5px)" : "none",
+              transition: "all 0.3s ease",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                marginBottom: "4px",
+              }}
+            >
+              <span style={{ fontSize: "20px" }}>{FEATURES[activeFeature].icon}</span>
+              <h3
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 800,
+                  color: "#f1f5f9",
+                  margin: 0,
+                }}
+              >
+                {FEATURES[activeFeature].label}
+              </h3>
+            </div>
+            <p style={{ fontSize: "14px", color: "#64748b", margin: 0 }}>
+              {FEATURES[activeFeature].desc}
+            </p>
+          </div>
+
+          <AppMockup activeFeature={activeFeature} isMobile={isMobile} />
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "6px",
+              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+              gap: "8px",
               marginTop: "16px",
             }}
           >
-            {FEATURES.map((f, i) => (
-              <button
-                key={f.label}
-                onClick={() => {
-                  setActiveFeature(i);
-                  setPaused(true);
-                }}
-                style={{
-                  padding: "10px 8px",
-                  borderRadius: "10px",
-                  cursor: "pointer",
-                  background:
-                    activeFeature === i
-                      ? "rgba(52,211,153,0.12)"
-                      : "rgba(15,23,42,0.5)",
-                  border:
-                    activeFeature === i
-                      ? "1.5px solid rgba(52,211,153,0.45)"
-                      : "1.5px solid rgba(51,65,85,0.35)",
-                  textAlign: "center",
-                  outline: "none",
-                }}
-              >
-                <div style={{ fontSize: "16px", marginBottom: "3px" }}>
-                  {f.icon}
-                </div>
-                <div
+            {FEATURES.map((f, i) => {
+              const isActive = activeFeature === i;
+              return (
+                <button
+                  key={f.label}
+                  onClick={() => {
+                    setActiveFeature(i);
+                    setPaused(true);
+                  }}
                   style={{
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    color: activeFeature === i ? "#34d399" : "#64748b",
+                    padding: "12px 8px",
+                    borderRadius: "14px",
+                    cursor: "pointer",
+                    background: isActive
+                      ? "linear-gradient(135deg, rgba(52,211,153,0.15), rgba(52,211,153,0.08))"
+                      : "rgba(15,23,42,0.45)",
+                    border: isActive
+                      ? "1.5px solid rgba(52,211,153,0.45)"
+                      : "1.5px solid rgba(255,255,255,0.08)",
+                    textAlign: "center",
+                    outline: "none",
+                    transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+                    transform: isActive ? "scale(1.02)" : "none",
+                    boxShadow: isActive ? "0 4px 12px rgba(52,211,153,0.1)" : "none",
                   }}
                 >
-                  {f.label}
-                </div>
-              </button>
-            ))}
+                  <div style={{ fontSize: "18px", marginBottom: "4px" }}>
+                    {f.icon}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      color: isActive ? "#34d399" : "#64748b",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    {f.label}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
+      <ValuePropSection visible={visible} isMobile={isMobile} />
+      <PainPointsSection visible={visible} isMobile={isMobile} />
+      <FullFeaturesSection visible={visible} isMobile={isMobile} />
+      <AudienceSection visible={visible} isMobile={isMobile} />
       <TestimonialsMarquee visible={visible} isMobile={isMobile} />
       <PricingSection
         visible={visible}

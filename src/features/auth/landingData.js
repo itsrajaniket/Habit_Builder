@@ -6,6 +6,10 @@ import IMG_XP from "../../assets/images/IMG_XP.jpeg";
 import IMG_STREAKS from "../../assets/images/IMG_STREAKS.jpeg";
 import IMG_ACHIEVEMENTS from "../../assets/images/IMG_ACHIEVEMENTS.jpeg";
 import IMG_BESTDAY from "../../assets/images/IMG_BESTDAY.jpeg";
+import ring from "../../assets/images/ring.jpeg";
+import today from "../../assets/images/today.jpeg";
+
+export const BRAND_NAME = "Habit Builder Kit";
 
 export const HEADLINE_WORDS = [
   "Level",
@@ -19,6 +23,92 @@ export const HEADLINE_WORDS = [
   "time.",
 ];
 
+export const HERO_SUBTITLE = "Habit Builder Kit is the minimalist habit tracker built for consistency. We’ve stripped away the noise to help you master your day, one tile at a time. No distractions—just pure progress.";
+
+export const VALUE_PROP = "The only habit tracker designed to help you build momentum without the burnout. Focus on what matters, one tile at a time.";
+
+export const PAIN_POINTS = [
+  {
+    problem: "Overwhelming complexity",
+    solution: "We stripped away the noise to help you master your day, one tile at a time.",
+    icon: "🧘"
+  },
+  {
+    problem: "Loss of motivation",
+    solution: "Interactive tile grids and XP levels turn your progress into an art piece.",
+    icon: "🔥"
+  },
+  {
+    problem: "Data privacy concerns",
+    solution: "No tracking, no ads, no selling your habits. Your journey is yours alone.",
+    icon: "🔒"
+  },
+  {
+    problem: "Inconsistent tracking",
+    solution: "A lightweight interface that gets you in, out, and back to your life.",
+    icon: "🚀"
+  }
+];
+
+export const PILLARS = [
+  {
+    title: "Frictionless Starting",
+    desc: "Don't get overwhelmed. Set a habit in seconds and start immediately.",
+    icon: "⚡"
+  },
+  {
+    title: "Visual Momentum",
+    desc: "Our signature tile grid turns your effort into an art piece. When you see your progress, you won't want to break the chain.",
+    icon: "🎨"
+  },
+  {
+    title: "Minimalist Focus",
+    desc: "We don’t sell your data or clutter your screen. It’s just you, your goals, and the win.",
+    icon: "🎯"
+  }
+];
+
+export const DIFFERENCES = [
+  {
+    feature: "Visual Motivation",
+    experience: "A gorgeous, 'GitHub-style' tile grid that makes your hard work tangible.",
+    icon: "📊"
+  },
+  {
+    feature: "Custom Dashboards",
+    experience: "Your goals aren't one-size-fits-all. Your tracker shouldn't be either.",
+    icon: "🛠️"
+  },
+  {
+    feature: "Privacy First",
+    experience: "No tracking, no ads, no selling your habits to third parties. Period.",
+    icon: "🔒"
+  },
+  {
+    feature: "Pure Speed",
+    experience: "A lightweight interface that gets you in, out, and back to your life.",
+    icon: "🚀"
+  }
+];
+
+export const AUDIENCE = [
+  {
+    title: "The Minimalist",
+    desc: "You want a tool that stays out of your way.",
+    icon: "🌑"
+  },
+  {
+    title: "The Visual Learner",
+    desc: "You need to see your progress to stay motivated.",
+    icon: "👁️"
+  },
+  {
+    title: "The Privacy Advocate",
+    desc: "You believe your self-improvement journey is your business only.",
+    icon: "🛡️"
+  }
+];
+
 export const FEATURES = [
   {
     icon: "📅",
@@ -27,16 +117,23 @@ export const FEATURES = [
     img: IMG_YESTERDAY,
   },
   {
-    icon: "📊",
-    label: "Analytics",
-    desc: "Understand your patterns",
-    img: IMG_BESTDAY,
+    icon: "⚡",
+    label: "Today View",
+    desc: "Focus On Today",
+    img: today,
   },
+
   {
     icon: "🧠",
     label: "Mental State",
     desc: "Track mood & motivation",
     img: IMG_MENTAL,
+  },
+  {
+    icon: "📊",
+    label: "Analytics",
+    desc: "Understand your patterns",
+    img: IMG_BESTDAY,
   },
   {
     icon: "🔥",
@@ -56,6 +153,13 @@ export const FEATURES = [
     label: "Achievements",
     desc: "Unlock rewards",
     img: IMG_ACHIEVEMENTS,
+  },
+
+  {
+    icon: "⭕",
+    label: "Progress Rings",
+    desc: "Track your progress",
+    img: ring,
   },
 ];
 

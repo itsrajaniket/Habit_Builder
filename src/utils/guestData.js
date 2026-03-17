@@ -2,120 +2,16 @@
 // 15 habits across 5 categories with 3 months of realistic data
 
 export const GUEST_HABITS = [
-  // Morning / Mindfulness
-  {
-    id: 1,
-    name: "Morning Meditation",
-    emoji: "🧘",
-    category: "mindfulness",
-    board: "all",
-  },
-  {
-    id: 2,
-    name: "Gratitude Journal",
-    emoji: "📓",
-    category: "mindfulness",
-    board: "all",
-  },
-  {
-    id: 3,
-    name: "5-min Deep Breathing",
-    emoji: "🌬️",
-    category: "mindfulness",
-    board: "all",
-  },
-
-  // Fitness
-  {
-    id: 4,
-    name: "Exercise 30 min",
-    emoji: "🏃",
-    category: "fitness",
-    board: "all",
-  },
-  {
-    id: 5,
-    name: "10,000 Steps",
-    emoji: "👟",
-    category: "fitness",
-    board: "all",
-  },
-  {
-    id: 6,
-    name: "Stretch / Yoga",
-    emoji: "🤸",
-    category: "fitness",
-    board: "all",
-  },
-
-  // Health
-  {
-    id: 7,
-    name: "Drink 8 Glasses",
-    emoji: "💧",
-    category: "health",
-    board: "all",
-  },
-  {
-    id: 8,
-    name: "Sleep by 11 PM",
-    emoji: "😴",
-    category: "health",
-    board: "all",
-  },
-  {
-    id: 9,
-    name: "No Junk Food",
-    emoji: "🥗",
-    category: "health",
-    board: "all",
-  },
-
-  // Learning
-  {
-    id: 10,
-    name: "Read 20 Pages",
-    emoji: "📚",
-    category: "learning",
-    board: "all",
-  },
-  {
-    id: 11,
-    name: "Learn Something New",
-    emoji: "🧠",
-    category: "learning",
-    board: "all",
-  },
-  {
-    id: 12,
-    name: "Practice Coding",
-    emoji: "💻",
-    category: "learning",
-    board: "all",
-  },
-
-  // Focus / Productivity
-  {
-    id: 13,
-    name: "No Social Media",
-    emoji: "📵",
-    category: "focus",
-    board: "all",
-  },
-  {
-    id: 14,
-    name: "Deep Work Block",
-    emoji: "🎯",
-    category: "focus",
-    board: "all",
-  },
-  {
-    id: 15,
-    name: "Plan Tomorrow",
-    emoji: "📋",
-    category: "focus",
-    board: "all",
-  },
+  { id: 1,  name: "Drink 8 Glasses",    emoji: "💧", category: "health",      board: "all" }, // 100%
+  { id: 2,  name: "Morning Meditation", emoji: "🧘", category: "mindfulness", board: "all" }, // > 80% (Green)
+  { id: 3,  name: "Daily Walk",         emoji: "👟", category: "fitness",     board: "all" }, // > 80% (Green)
+  { id: 4,  name: "Deep Work Block",    emoji: "🎯", category: "focus",       board: "all" }, // > 60% (Blue)
+  { id: 5,  name: "Read 20 Pages",      emoji: "📚", category: "learning",    board: "all" }, // > 60% (Blue)
+  { id: 6,  name: "Sleep by 11 PM",     emoji: "😴", category: "health",      board: "all" }, // > 40% (Yellow)
+  { id: 7,  name: "No Social Media",    emoji: "📵", category: "focus",       board: "all" }, // > 40% (Yellow)
+  { id: 8,  name: "Gratitude Journal",  emoji: "📓", category: "mindfulness", board: "all" }, // > 20% (Orange)
+  { id: 9,  name: "Practice Coding",    emoji: "💻", category: "learning",    board: "all" }, // > 1% (Red)
+  { id: 10, name: "Stretch / Yoga",     emoji: "🤸", category: "fitness",     board: "all" }, // 0% (Gray)
 ];
 
 function fmt(y, m, d) {
@@ -133,21 +29,16 @@ function generateCompletions() {
   // Each habit has its own "personality" — some very consistent, some streaky
   // Index matches GUEST_HABITS order (0-based)
   const profiles = [
-    { rate: 0.88, streak: true }, // Meditation — very consistent
-    { rate: 0.75, streak: false }, // Journal — good but occasional misses
-    { rate: 0.7, streak: false }, // Breathing
-    { rate: 0.65, streak: true }, // Exercise — building habit
-    { rate: 0.8, streak: false }, // Steps — usually hits it
-    { rate: 0.55, streak: false }, // Yoga — inconsistent
-    { rate: 0.92, streak: true }, // Water — nearly every day
-    { rate: 0.6, streak: false }, // Sleep — hard one
-    { rate: 0.5, streak: false }, // No junk — toughest
-    { rate: 0.78, streak: false }, // Reading
-    { rate: 0.62, streak: false }, // Learn
-    { rate: 0.58, streak: false }, // Coding
-    { rate: 0.7, streak: true }, // No social media
-    { rate: 0.72, streak: false }, // Deep work
-    { rate: 0.85, streak: false }, // Plan tomorrow — easy win habit
+    { target: 1.00 }, // Water (100% - custom accent)
+    { target: 0.90 }, // Meditation (90% - emerald)
+    { target: 0.85 }, // Walk (85% - emerald)
+    { target: 0.70 }, // Deep work (70% - blue)
+    { target: 0.65 }, // Reading (65% - blue)
+    { target: 0.50 }, // Sleep (50% - yellow)
+    { target: 0.45 }, // No Social Media (45% - yellow)
+    { target: 0.30 }, // Journal (30% - orange)
+    { target: 0.10 }, // Coding (10% - red)
+    { target: 0.00 }, // Stretch (0% - gray)
   ];
 
   for (let monthOffset = 2; monthOffset >= 0; monthOffset--) {
@@ -160,21 +51,16 @@ function generateCompletions() {
 
     GUEST_HABITS.forEach((h, hi) => {
       if (!completions[h.id]) completions[h.id] = {};
-      const { rate, streak } = profiles[hi];
+      const { target } = profiles[hi];
 
+      // To hit exact percentages for current month, do a strict ratio distribution
       for (let d = 1; d <= dim; d++) {
-        if (isCurrentMonth && d > todayD) continue;
         const ds = fmt(y, m, d);
-
-        if (streak) {
-          // Streak personality: long runs of success with occasional breaks
-          const phase = Math.floor((d + hi * 3) / 7) % 3;
-          completions[h.id][ds] = phase < 2; // 2 weeks on, 1 week patchy
-        } else {
-          // Regular personality: seeded pseudo-random based on habit + day
-          const seed = (h.id * 37 + d * 13 + m * 7) % 100;
-          completions[h.id][ds] = seed < rate * 100;
-        }
+        if (isCurrentMonth && d > todayD) continue; // no future completions
+        
+        // Use a seeded approach so gaps look random but math holds true
+        const seed = ((h.id * 37) + (d * 13) + (m * 7)) % 100;
+        completions[h.id][ds] = seed < (target * 100);
       }
     });
   }
@@ -187,6 +73,9 @@ function generateMentalState() {
   const motivation = {};
   const now = new Date();
 
+  // Create a continuous day counter for smooth wave functions
+  let absoluteDay = 0;
+
   for (let monthOffset = 2; monthOffset >= 0; monthOffset--) {
     const date = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1);
     const y = date.getFullYear();
@@ -196,17 +85,35 @@ function generateMentalState() {
     const todayD = now.getDate();
 
     for (let d = 1; d <= dim; d++) {
+      absoluteDay++;
       if (isCurrentMonth && d > todayD) continue;
+      
       const ds = fmt(y, m, d);
-      // Slightly upward trend over time to show progress
-      const trendBoost = monthOffset === 0 ? 1 : monthOffset === 1 ? 0 : -1;
-      const moodSeed = (d * 17 + m * 5) % 5;
-      const motivSeed = (d * 11 + m * 9) % 5;
-      mood[ds] = Math.max(3, Math.min(10, 6 + moodSeed - 2 + trendBoost));
-      motivation[ds] = Math.max(
-        3,
-        Math.min(10, 7 + motivSeed - 2 + trendBoost),
-      );
+      const currentDate = new Date(y, m - 1, d);
+      const dayOfWeek = currentDate.getDay(); // 0 is Sunday, 6 is Saturday
+
+      // Weekend bump for Mood (Happy on Fri/Sat, dips on Mon/Tue)
+      let weekendMoodBoost = (dayOfWeek === 5 || dayOfWeek === 6) ? 1.5 : (dayOfWeek === 0) ? 0.5 : (dayOfWeek === 1 || dayOfWeek === 2) ? -1.0 : 0;
+      
+      // Motivation bump (High early in the week, low on Fri/Sat)
+      let weekendMotivBoost = (dayOfWeek === 1 || dayOfWeek === 2) ? 1.5 : (dayOfWeek === 5 || dayOfWeek === 6) ? -1.0 : 0;
+
+      // Long wave to simulate "good weeks" and "bad weeks"
+      let longWaveMood = Math.sin(absoluteDay / 14 * Math.PI * 2) * 1.5;
+      let longWaveMotiv = Math.cos(absoluteDay / 10 * Math.PI * 2) * 1.5;
+
+      // Random noise seed
+      const noise = ((d * 17 + m * 5) % 100) / 100; // 0.0 to 1.0
+      
+      // Calculate base values (typically around 6.5 out of 10)
+      let baseMood = 6.5 + weekendMoodBoost + longWaveMood + (noise * 2 - 1);
+      let baseMotiv = 6.5 + weekendMotivBoost + longWaveMotiv + (noise * 2 - 1);
+
+      // Add a slight upward trend over the 3 months to show general improvement
+      const trendBoost = monthOffset === 0 ? 0.8 : monthOffset === 1 ? 0 : -0.8;
+      
+      mood[ds] = Math.max(1, Math.min(10, Math.round(baseMood + trendBoost)));
+      motivation[ds] = Math.max(1, Math.min(10, Math.round(baseMotiv + trendBoost)));
     }
   }
 

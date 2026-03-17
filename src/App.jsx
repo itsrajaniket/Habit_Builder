@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AuthGuard from "./features/auth/AuthGuard";
+import { ProGate } from "./features/auth/ProGate";
 import GlobalNav from "./components/GlobalNav";
 import CommandBar from "./components/CommandBar";
 import CalendarTable from "./features/calendar/CalendarTable";
@@ -163,7 +164,7 @@ function AppContent() {
 
       {/* ── Banners row ── */}
       {(showToday || streakFreezes > 0) && (
-        <div className="px-5 pt-4 flex flex-col gap-2">
+        <div className="px-3 md:px-5 pt-4 flex flex-col gap-2">
           {showToday && <TodayPanel onClose={() => setShowToday(false)} />}
 
           {streakFreezes > 0 && (
@@ -204,10 +205,7 @@ function AppContent() {
       )}
 
       {/* ── Main two-column grid ── */}
-      <div
-        className="grid gap-5 px-5 pt-5 pb-0"
-        style={{ gridTemplateColumns: "1fr 340px" }}
-      >
+      <div className="grid gap-5 px-3 md:px-5 pt-5 pb-0 grid-cols-1 lg:grid-cols-[1fr_340px] items-start">
         {/* LEFT col */}
         <div className="flex flex-col gap-4 min-w-0">
           <div className="card rounded-2xl p-5 slide-up">
@@ -240,28 +238,36 @@ function AppContent() {
             defaultOpen
             storageKey="mentalStatePanel"
           >
-            <MentalStatePanel />
+            <ProGate feature="analytics">
+              <MentalStatePanel />
+            </ProGate>
           </Collapsible>
           <Collapsible
             title="📈 Daily Progress"
             defaultOpen
             storageKey="progressChartPanel"
           >
-            <ProgressChart />
+            <ProGate feature="analytics">
+              <ProgressChart />
+            </ProGate>
           </Collapsible>
           <Collapsible
             title="🎯 Habit Progress Rings"
             defaultOpen
             storageKey="progressRingsPanel"
           >
-            <ProgressRings />
+            <ProGate feature="analytics">
+              <ProgressRings />
+            </ProGate>
           </Collapsible>
           <Collapsible
             title="⚔️ XP & Level"
             defaultOpen
             storageKey="xpLevelPanel"
           >
-            <XPLevelCard />
+            <ProGate feature="xp">
+              <XPLevelCard />
+            </ProGate>
           </Collapsible>
         </div>
 
@@ -271,7 +277,9 @@ function AppContent() {
 
       {/* ── Deep Analytics ── */}
       <div className="px-0 pt-5">
-        <AnalyticsFooter />
+        <ProGate feature="analytics">
+          <AnalyticsFooter />
+        </ProGate>
       </div>
 
       <AppFooter />
