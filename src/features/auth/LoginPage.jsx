@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import useHabitStore from "../../store/habitStore";
 import AuthView from "./AuthForms";
+import AppFooter from "../../components/AppFooter";
 import {
   BRAND_NAME,
   HEADLINE_WORDS,
@@ -1919,6 +1920,7 @@ function LandingView({ onGetStarted, onSignIn, onGuestMode }) {
           Free forever · No credit card required
         </p>
       </div>
+      <AppFooter />
     </div>
   );
 }
