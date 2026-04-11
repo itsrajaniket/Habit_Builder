@@ -28,13 +28,14 @@ Habit Builder Kit is a modern, high-fidelity daily habit tracker built for a pre
 
 ## 2. Live Demo & Visuals
 
-*Live Demo link coming soon!*
 
-### Screenshots
+- **Live Demo Link:** [https://habit-builder-kit.vercel.app/]
+
+<!-- ### Screenshots
 - ![Dashboard View](./screenshots/dashboard.png)
 - ![Mental State Analytics](./screenshots/analytics.png)
 - ![Calendar Heatmap](./screenshots/calendar.png)
-- ![XP & Leveling System](./screenshots/leveling.png)
+- ![XP & Leveling System](./screenshots/leveling.png) -->
 
 ---
 
